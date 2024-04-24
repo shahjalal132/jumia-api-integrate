@@ -67,24 +67,37 @@ class ProductSync {
     }
 
     public function updateOrCreateProducts( $vendorProducts, $googleProducts ) {
+
+        $responseMessage = '';
+
         foreach ( $vendorProducts as $vendorProduct ) {
             $vendorSku = $vendorProduct['id'];
+            $found     = false;
 
             foreach ( $googleProducts as $googleProduct ) {
                 $googleSku = $googleProduct[2];
 
                 if ( $vendorSku == $googleSku ) {
                     // Update product
-
-                    echo "product updated";
-                } else {
-                    // Create product
-
-                    echo "product created";
+                    $found           = true;
+                    $responseMessage = "Product with SKU $googleSku already exists. Updating...\n";
+                    // Perform update logic here
+                    $this->update_existing_product();
+                    break;
                 }
             }
+
+            if ( !$found ) {
+                // Create product
+                $responseMessage = "Product with SKU $vendorSku not found. Creating...\n";
+                // Perform create logic here
+                $this->create_new_product();
+            }
         }
+
+        echo $responseMessage;
     }
+
 
     public function create_new_product() {
         // product array
@@ -297,7 +310,8 @@ class ProductSync {
         $response = curl_exec( $curl );
 
         curl_close( $curl );
-        echo $response;
+
+        echo "Product Updated $response";
     }
 
     public function synchronizeProducts() {
@@ -307,10 +321,30 @@ class ProductSync {
         // Fetch products from Google Sheets
         $googleProducts = $this->fetchProductsFromSheets();
 
+
+
     }
 }
 
 $productSync = new ProductSync();
-// $productSync->synchronizeProducts();
-$productSync->update_existing_product();
 
+/* Fetch products */
+/* echo '<pre>';
+print_r( $productSync->fetchProductsFromApi() );
+echo '</pre>';
+
+echo '<br>';
+echo '<pre>';
+print_r( $productSync->fetchProductsFromSheets() );
+echo '</pre>'; */
+
+
+/* perform operations here */
+/* $vendorProducts = $productSync->fetchProductsFromApi();
+$googleProducts = $productSync->fetchProductsFromSheets();
+$productSync->updateOrCreateProducts( $vendorProducts, $googleProducts ); */
+
+/* Create and Update product manually */
+/* $productSync->create_new_product();
+echo "<br>";
+$productSync->update_existing_product(); */
