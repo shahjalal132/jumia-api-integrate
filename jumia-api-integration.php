@@ -7,20 +7,22 @@ function fetch_products_from_api() {
 
     $curl = curl_init();
 
-    curl_setopt_array( $curl, array(
-        CURLOPT_URL            => 'https://vendor-api-staging.jumia.com/catalog/products',
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING       => '',
-        CURLOPT_MAXREDIRS      => 10,
-        CURLOPT_TIMEOUT        => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST  => 'GET',
-        CURLOPT_HTTPHEADER     => array(
-            'Authorization: Bearer ' . JUMIA_ACCESS_TOKEN,
-            'Cookie: __cf_bm=5vqn_tlYJwoX74LqdRmj_Ii.zJgUksjaV_O6ewUqE5U-1713852921-1.0.1.1-pcINdhnibkJOgYhazL36Xm9j1xjtmB926xN4ZfQt2G1tXYC5LKLc1IImoGUJAtZnCgch2uulyojmT8kQMHwimw',
-        ),
-    )
+    curl_setopt_array(
+        $curl,
+        array(
+            CURLOPT_URL            => 'https://vendor-api-staging.jumia.com/catalog/products',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => '',
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST  => 'GET',
+            CURLOPT_HTTPHEADER     => array(
+                'Authorization: Bearer ' . JUMIA_ACCESS_TOKEN,
+                'Cookie: __cf_bm=5vqn_tlYJwoX74LqdRmj_Ii.zJgUksjaV_O6ewUqE5U-1713852921-1.0.1.1-pcINdhnibkJOgYhazL36Xm9j1xjtmB926xN4ZfQt2G1tXYC5LKLc1IImoGUJAtZnCgch2uulyojmT8kQMHwimw',
+            ),
+        )
     );
 
     $response = curl_exec( $curl );
@@ -182,7 +184,7 @@ function create_new_product() {
 
 }
 
-function update_existing_product() {
+function update_existing_product( $products = [] ) {
 
     $curl = curl_init();
 
@@ -449,6 +451,6 @@ function update_existing_product() {
 
 }
 
-// create_new_product();
+create_new_product();
 // update_existing_product();
-fetch_products_from_api();
+// fetch_products_from_api();
