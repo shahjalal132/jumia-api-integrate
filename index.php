@@ -25,8 +25,8 @@ class ProductSync {
         return 'Hello';
     }
 
-    public function fetchProductsFromSheets( $range ) {
-        $response = $this->service->spreadsheets_values->get( $this->spreadsheetID, $range );
+    public function fetchProductsFromSheets() {
+        $response = $this->service->spreadsheets_values->get( $this->spreadsheetID, $this->sheetRange );
         return $response->getValues();
     }
 
@@ -36,7 +36,7 @@ class ProductSync {
             $found     = false;
 
             foreach ( $googleProducts as $googleProduct ) {
-                $googleSku = $googleProduct[0]; // Assuming SKU is in the first column
+                $googleSku = $googleProduct[2];
 
                 if ( $vendorSku == $googleSku ) {
                     // Update product
@@ -62,7 +62,7 @@ class ProductSync {
             print ( "No data found from vendor API.\n" );
         } else {
             // Fetch products from Google Sheets
-            $googleProducts = $this->fetchProductsFromSheets( $this->sheetRange );
+            $googleProducts = $this->fetchProductsFromSheets();
 
             // Check if data is fetched successfully from Google Sheets
             if ( empty( $googleProducts ) ) {
