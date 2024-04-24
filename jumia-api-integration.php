@@ -184,7 +184,7 @@ function create_new_product() {
 
 }
 
-function update_existing_product( $products = [] ) {
+function update_existing_product() {
 
     $curl = curl_init();
 
@@ -199,7 +199,23 @@ function update_existing_product( $products = [] ) {
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST  => 'POST',
-            CURLOPT_POSTFIELDS     => '{
+            CURLOPT_POSTFIELDS     => '',
+            CURLOPT_HTTPHEADER     => array(
+                'Authorization: Bearer ' . JUMIA_ACCESS_TOKEN,
+                'Content-Type: application/json',
+                'Cookie: __cf_bm=J.KuHSJ9RPzg0mXYMQJthrq5C1vsLZVV_c09qWXUzHI-1713786910-1.0.1.1-RxUQQR7OTwiBw46hjN2C2UKiN_SXEuuayY7ujq0kv_XUXeROozkcrW_ytbB57A1AIRgtwpRaZ9h1c3J2XveoQQ',
+            ),
+        )
+    );
+
+    $response = curl_exec( $curl );
+
+    curl_close( $curl );
+    echo $response;
+
+}
+function convert_product_json() {
+    $productJson = '{
         "shopId": "a8b5534b-277b-449c-97b7-c00979dd9c3a",
         "products": [
             {
@@ -435,22 +451,18 @@ function update_existing_product( $products = [] ) {
             ]
             }
         ]
-        }',
-            CURLOPT_HTTPHEADER     => array(
-                'Authorization: Bearer ' . JUMIA_ACCESS_TOKEN,
-                'Content-Type: application/json',
-                'Cookie: __cf_bm=J.KuHSJ9RPzg0mXYMQJthrq5C1vsLZVV_c09qWXUzHI-1713786910-1.0.1.1-RxUQQR7OTwiBw46hjN2C2UKiN_SXEuuayY7ujq0kv_XUXeROozkcrW_ytbB57A1AIRgtwpRaZ9h1c3J2XveoQQ',
-            ),
-        )
-    );
+        }';
 
-    $response = curl_exec( $curl );
+    // convert to array
+    $products = json_decode( $productJson, true );
 
-    curl_close( $curl );
-    echo $response;
-
+    return $products;
 }
 
-create_new_product();
+// create_new_product();
 // update_existing_product();
 // fetch_products_from_api();
+
+echo '<pre>';
+print_r( convert_product_json() );
+die();
