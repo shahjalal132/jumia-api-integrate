@@ -9,6 +9,8 @@ class ProductSync {
     private $sheetRange;
     private $credentialsPath = __DIR__ . '/credentials.json';
     private $accessToken;
+    private $shopID;
+    private $productInfo = [];
 
     public function __construct() {
         $this->client = new Google\Client();
@@ -19,6 +21,7 @@ class ProductSync {
         $this->service       = new Google_Service_Sheets( $this->client );
         $this->spreadsheetID = '1igZQ5L-FlY7FTzqMpxPOzbscWLYo15hLW5s9YHwPRD4';
         $this->sheetRange    = 'products!A:E';
+        $this->shopID        = 'a8b5534b-277b-449c-97b7-c00979dd9c3a';
         $this->accessToken   = $this->generateAccessToken();
     }
 
@@ -133,20 +136,18 @@ class ProductSync {
     public function create_new_product() {
         // product array
         $productArray = [
-            'shopId'   => 'a8b5534b-277b-449c-97b7-c00979dd9c3a',
+            'shopId'   => $this->shopID,
             'products' => [
                 [
                     'name'        => [
-                        'value'        => 'Name should be between 15 and 60 characters jalal',
+                        'value'        => 'Name should be between 15 and 60 characters',
                         'translations' => [
-                            [ 'language' => 'AR', 'value' => 'اختبار اسم المنتج' ],
                             [ 'language' => 'FR', 'value' => 'Test du nom du produit' ],
                         ],
                     ],
                     'description' => [
-                        'value'        => 'Description should have more than 150 words. Product number35G41EAProduct nameHP Spectre x360 Convertible 14-ea0047naMicroprocessorIntel® Core™ i5-1135G7 (up to 4.2 GHz with Intel® Turbo Boost Technology, 8 MB L3 cache, 4 cores)ChipsetIntel® Integrated SoCMemory, standard8 GB LPDDR4x-3733 MHz RAM (onboard)Video graphicsIntel® Iris® Xᵉ GraphicsHard drive512 GB PCIe® NVMe™ TLC M.2 SSDOptical driveOptical drive not includedDisplay34.3 cm (13.5) diagonal, WUXGA+ (1920 x 1280), multitouch-enabled, IPS, edge-to-edge glass, micro-edge, Corning® Gorilla® Glass NBT™, 1000 nits, 100% sRGB, HP Sure View Reflect integrated privacy screenWireless connectivityIntel® Wi-Fi 6 AX201 (2x2) and Bluetooth® 5 combo (Supporting Gigabit file transfer speeds)Expansion slots1 microSD media card readerExternal ports2 Thunderbolt™ 4 with USB4™ Type-C® 40Gbps signaling rate (USB Power Delivery, DisplayPort™ 1.4, HP Sleep and Charge); 1 SuperSpeed USB Type-A 10Gbps signaling rate (HP Sleep and Charge); 1 headphone/microphone comboMinimum dimensions (W x D x H)29.83 x 22.01 x 1.69 cmWeight1.34 kgPower supply type65 W USB Type-C® power adapterBattery type4-cell, 66 Wh Li-ion polymerBattery life mixed usageUp to 15 hours and 45 minutesVideo Playback Battery lifeUp to 16 hours and 30 minutesWebcamHP True Vision 720p HD IR camera with camera shutter and integrated dual array digital microphonesAudio featuresAudio by Bang & Olufsen; Quad speakers; HP Audio BoostSoftwareOperating systemWindows 10 Home 64HP appsHP 3D DriveGuard; HP Audio Switch; HP JumpStart; HP Support AssistantSoftware includedMcAfee LiveSafe™Pre-installed softwareExpressVPN (30 day free trial); LastPass Premium (30 day free trial).',
+                        'value'        => 'Description should have more than 150 words.',
                         'translations' => [
-                            [ 'language' => 'AR', 'value' => 'اختبار اسم المنتج' ],
                             [ 'language' => 'FR', 'value' => 'Test du description du produit' ],
                         ],
                     ],
@@ -158,7 +159,6 @@ class ProductSync {
                     'category'    => [ 'code' => 1004141, 'name' => 'Gaming / PC Gaming / Accessories / Controllers' ],
                     'images'      => [
                         [ 'url' => 'https://ng.jumia.is/LgDWyaUAUqlaDlr6gmf0ui43GGk=/fit-in/500x500/filters:fill(white)/product/90/278208/1.jpg?4790', 'primary' => 1 ],
-                        [ 'url' => 'https://ng.jumia.is/W-t47t1CIN1cl_y6KcnaM5Z-PjM=/fit-in/500x500/filters:fill(white)/product/90/278208/2.jpg?4790', 'primary' => null ],
                     ],
                     'price'       => [
                         'currency'  => 'USD',
@@ -169,15 +169,6 @@ class ProductSync {
                     'attributes'  => [
                         [ 'name' => 'isbn', 'value' => '0-6280-1750-2' ],
                         [ 'name' => 'note', 'value' => 'note about the product' ],
-                        [ 'name' => 'plug_type', 'value' => 'EU' ],
-                        [ 'name' => 'voltage', 'value' => '100' ],
-                        [ 'name' => 'connection_gender', 'value' => 'gender of the connection' ],
-                        [ 'name' => 'battery_capacity', 'value' => '100 mAh' ],
-                        [ 'name' => 'model', 'value' => 'product model', 'translations' => [ [ 'language' => 'AR', 'value' => 'محتوى العبوة عربي' ], [ 'language' => 'FR', 'value' => 'Produit model' ] ] ],
-                        [ 'name' => 'short_description', 'value' => 'short description should have at least 4 bullets short description short description short description' ],
-                        [ 'name' => 'color_family', 'value' => 'Black' ],
-                        [ 'name' => 'color', 'value' => 'Black' ],
-                        [ 'name' => 'warranty_duration', 'value' => '10' ],
                     ],
                 ],
             ],
