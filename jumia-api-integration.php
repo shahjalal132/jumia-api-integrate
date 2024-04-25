@@ -3,6 +3,39 @@
 // Define Access token
 define( 'JUMIA_ACCESS_TOKEN', 'eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJtU0VNMmNQX0h4UldDTl9Lcm1Hal9zVjRRZWt6eUU1VTVlR2drUk5SOElNIn0.eyJqdGkiOiIzOGJmMjE2OS0zODhiLTQxNjctOGUzZC0zZjRlOGYyOTI5YTYiLCJleHAiOjE3MTM5OTQ4ODYsIm5iZiI6MCwiaWF0IjoxNzEzOTUxNjg2LCJpc3MiOiJodHRwczovL3ZlbmRvci1hcGktc3RhZ2luZy5qdW1pYS5jb20vYXV0aC9yZWFsbXMvYWNsIiwic3ViIjoiYWIxM2U1YmMtMTE4Ni00MGU5LTg3MDEtN2IzMTlkNDM3ZmFlIiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiNzQwYjlhNmQtMWY5MS00Njg3LTgyNTAtZTQ5YjAxNTlkZjQwIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiYmU4MDYwOWUtYTUzYi00ZmI5LTkxYzMtZDM3OGE1ZGU2MTc1IiwiYWNyIjoiMSIsInNjb3BlIjoicHJvZmlsZSBlbWFpbCIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJiZW9iaXAyMDIwK3N0Z3Rlc3RAZ21haWwuY29tIiwibG9jYWxlIjoiZW4iLCJlbWFpbCI6ImJlb2JpcDIwMjArc3RndGVzdEBnbWFpbC5jb20ifQ.EjP5a5Vw063HE-QW6zD0H3X3sQK7Uo4RCdLNnFve-bA773OiHab9CwPHamEQKCsuSN_qnRqzEeHqvrIrJeL6a-1Hn_UxLYLufaFhZJiA204q07fm7-yykmgtzlALuskpngsuCG_1ds80qNNj4XpVxHhNhfRQnbVJLNyyU5wHH3CQRaqQwO9kmnJs_RZDWjByBnZxBN-KRSTeluV5sG1Qb5oD43g7LxRRgHHpcSUVVSrhI0Ab8-a0Hyzm1r3OH-or4dz5XwAgvKBTcZSarV0G1Y0yQdV4_UZbCHkjOosGmICrXZPql8byVxznlRE3C0KOVKmMsXSy0SY71zCJvQbFjA' );
 
+function genegate_access_token() {
+
+    $curl = curl_init();
+
+    curl_setopt_array(
+        $curl,
+        array(
+            CURLOPT_URL            => 'https://vendor-api-staging.jumia.com/token',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => '',
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST  => 'POST',
+            CURLOPT_POSTFIELDS     => 'client_id=740b9a6d-1f91-4687-8250-e49b0159df40&grant_type=refresh_token&refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJiYTZkNTJjOS1mYTU4LTRiMzItYmU0OC00NDk1ZWNkODUxYTkifQ.eyJqdGkiOiI3NWIwMmFkZC1lMjY3LTQ1ZTgtYmZmMy01NmFlNzYxNGI2MGIiLCJleHAiOjE3NDUzMjAxODYsIm5iZiI6MCwiaWF0IjoxNzEzNzg0MTg2LCJpc3MiOiJodHRwczovL3ZlbmRvci1hcGktc3RhZ2luZy5qdW1pYS5jb20vYXV0aC9yZWFsbXMvYWNsIiwiYXVkIjoiaHR0cHM6Ly92ZW5kb3ItYXBpLXN0YWdpbmcuanVtaWEuY29tL2F1dGgvcmVhbG1zL2FjbCIsInN1YiI6ImFiMTNlNWJjLTExODYtNDBlOS04NzAxLTdiMzE5ZDQzN2ZhZSIsInR5cCI6IlJlZnJlc2giLCJhenAiOiI3NDBiOWE2ZC0xZjkxLTQ2ODctODI1MC1lNDliMDE1OWRmNDAiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiJiZTgwNjA5ZS1hNTNiLTRmYjktOTFjMy1kMzc4YTVkZTYxNzUiLCJzY29wZSI6InByb2ZpbGUgZW1haWwifQ.G8egLY5WAd3tr_HHs_Kbv9dxsU9Ye4qoJMTQEsf8JDc',
+            CURLOPT_HTTPHEADER     => array(
+                'Content-Type: application/x-www-form-urlencoded',
+                'Cookie: __cf_bm=98toz4aPL5L9z4W9VHuxRT3ed1D3Bg4VlXU0YFbf_Ls-1714017926-1.0.1.1-F8DKfmNyoukG0VjsEOD8Iyg3ubGi_2Dy7GpOG.CqBnWqKnYDy89V2LoQsV0bEG1xuPX7rlTkeB.zaDvbfjPWzw',
+            ),
+        )
+    );
+
+    $response = curl_exec( $curl );
+
+    curl_close( $curl );
+
+    $response = json_decode( $response, true );
+
+    return $response['access_token'];
+
+}
+
 function fetch_products_from_api() {
 
     $curl = curl_init();
@@ -463,6 +496,4 @@ function convert_product_json() {
 // update_existing_product();
 // fetch_products_from_api();
 
-echo '<pre>';
-print_r( convert_product_json() );
-die();
+echo genegate_access_token();
