@@ -107,15 +107,18 @@ class ProductSync {
             $vendorSku = $vendorProduct['id'];
             $found     = false;
 
+            $googleSingleProduct = [];
+
             foreach ( $googleProducts as $googleProduct ) {
-                $googleSku = $googleProduct[2];
+                $googleSingleProduct = $googleProduct;
+                $googleSku           = $googleProduct[2];
 
                 if ( $vendorSku == $googleSku ) {
                     // Update product
                     $found           = true;
                     $responseMessage = "Product with SKU $googleSku already exists. Updating...\n";
                     // Perform update logic here
-                    $this->update_existing_product();
+                    $this->update_existing_product( $googleProduct );
                     break;
                 }
             }
@@ -124,7 +127,7 @@ class ProductSync {
                 // Create product
                 $responseMessage = "Product with SKU $vendorSku not found. Creating...\n";
                 // Perform create logic here
-                $this->create_new_product();
+                $this->create_new_product( $googleSingleProduct );
             }
         }
 
@@ -132,7 +135,7 @@ class ProductSync {
     }
 
 
-    public function create_new_product() {
+    public function create_new_product( $product ) {
         // product array
         $productArray = [
             'shopId'   => $this->shopID,
@@ -200,7 +203,7 @@ class ProductSync {
         echo "product created $response";
     }
 
-    public function update_existing_product() {
+    public function update_existing_product( $product ) {
         // product array
         $productArray = [
             'shopId'   => $this->shopID,
