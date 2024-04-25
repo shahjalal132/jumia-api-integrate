@@ -21,7 +21,7 @@ class ProductSync {
         $this->service       = new Google_Service_Sheets( $this->client );
         $this->spreadsheetID = '1igZQ5L-FlY7FTzqMpxPOzbscWLYo15hLW5s9YHwPRD4';
         $this->sheetRange    = 'products!A:E';
-        $this->shopID        = 'a8b5534b-277b-449c-97b7-c00979dd9c3a';
+        $this->shopID        = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
         $this->accessToken   = $this->generateAccessToken();
     }
 
@@ -141,17 +141,13 @@ class ProductSync {
                 [
                     'name'        => [
                         'value'        => 'Name should be between 15 and 60 characters',
-                        'translations' => [
-                            [ 'language' => 'FR', 'value' => 'Test du nom du produit' ],
-                        ],
+                        'translations' => [],
                     ],
                     'description' => [
                         'value'        => 'Description should have more than 150 words.',
-                        'translations' => [
-                            [ 'language' => 'FR', 'value' => 'Test du description du produit' ],
-                        ],
+                        'translations' => [],
                     ],
-                    'parentSku'   => 'jalal123456',
+                    'parentSku'   => '',
                     'sellerSku'   => 'jalal123456',
                     'barcodeEan'  => '1234567000001239999',
                     'variation'   => 1,
@@ -161,14 +157,13 @@ class ProductSync {
                         [ 'url' => 'https://ng.jumia.is/LgDWyaUAUqlaDlr6gmf0ui43GGk=/fit-in/500x500/filters:fill(white)/product/90/278208/1.jpg?4790', 'primary' => 1 ],
                     ],
                     'price'       => [
-                        'currency'  => 'USD',
+                        'currency'  => 'EGP',
                         'value'     => 200,
-                        'salePrice' => [ 'value' => 150, 'startAt' => '2022-08-11', 'endAt' => '2022-08-22' ],
+                        'salePrice' => [ 'value' => 150, 'startAt' => '', 'endAt' => '' ],
                     ],
                     'stock'       => 500,
                     'attributes'  => [
                         [ 'name' => 'isbn', 'value' => '0-6280-1750-2' ],
-                        [ 'name' => 'note', 'value' => 'note about the product' ],
                     ],
                 ],
             ],
