@@ -136,34 +136,47 @@ class ProductSync {
 
 
     public function create_new_product( $product ) {
+
+        // extract product informations
+        $productName   = $product['1'] ?? null;
+        $sku           = $product['2'] ?? null;
+        $stock         = $product['3'] ?? null;
+        $regular_price = $product['4'] ?? null;
+        $selling_price = $product['5'] ?? null;
+        $description   = $product['6'] ?? null;
+        $brand         = $product['7'] ?? null;
+        $category      = $product['8'] ?? null;
+        $images        = $product['9'] ?? null;
+        $attributes    = $product['10'] ?? null;
+
         // product array
         $productArray = [
             'shopId'   => $this->shopID,
             'products' => [
                 [
                     'name'        => [
-                        'value'        => 'Name should be between 15 and 60 characters',
+                        'value'        => $productName,
                         'translations' => [],
                     ],
                     'description' => [
-                        'value'        => 'Description should have more than 150 words.',
+                        'value'        => $description,
                         'translations' => [],
                     ],
                     'parentSku'   => '',
-                    'sellerSku'   => 'jalal123456',
+                    'sellerSku'   => $sku,
                     'barcodeEan'  => '1234567000001239999',
                     'variation'   => 1,
-                    'brand'       => [ 'code' => 1126253, 'name' => '123 updated' ],
+                    'brand'       => [ 'code' => 1126253, 'name' => $brand ],
                     'category'    => [ 'code' => 1004141, 'name' => 'Gaming / PC Gaming / Accessories / Controllers' ],
                     'images'      => [
                         [ 'url' => 'https://ng.jumia.is/LgDWyaUAUqlaDlr6gmf0ui43GGk=/fit-in/500x500/filters:fill(white)/product/90/278208/1.jpg?4790', 'primary' => 1 ],
                     ],
                     'price'       => [
                         'currency'  => 'EGP',
-                        'value'     => 200,
-                        'salePrice' => [ 'value' => 150, 'startAt' => '', 'endAt' => '' ],
+                        'value'     => $regular_price,
+                        'salePrice' => [ 'value' => $selling_price, 'startAt' => '', 'endAt' => '' ],
                     ],
-                    'stock'       => 500,
+                    'stock'       => $stock,
                     'attributes'  => [
                         [ 'name' => 'isbn', 'value' => '0-6280-1750-2' ],
                     ],
