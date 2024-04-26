@@ -113,9 +113,9 @@ class ProductSync {
                 $googleSingleProduct = $googleProduct;
                 $googleSku           = $googleProduct[2];
 
-                if ( $vendorSku == $googleSku ) {
+                if ( $vendorSku === $googleSku ) {
                     // Update product
-                    $found           = true;
+                    $found = true;
                     // Perform update logic here
                     $this->update_existing_product();
                     $responseMessage = "Product with SKU $googleSku already exists. Updating...\n";
@@ -132,6 +132,36 @@ class ProductSync {
         }
 
         echo $responseMessage;
+    }
+
+    public function getProductStatus() {
+
+        $feedId = 'b9a89294-300e-4a40-9942-7dd689674751';
+
+        $curl = curl_init();
+
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL            => 'https://vendor-api-staging.jumia.com/feeds/' . $feedId,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING       => '',
+                CURLOPT_MAXREDIRS      => 10,
+                CURLOPT_TIMEOUT        => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST  => 'GET',
+                CURLOPT_HTTPHEADER     => array(
+                    'Authorization: Bearer ' . $this->accessToken,
+                ),
+            )
+        );
+
+        $response = curl_exec( $curl );
+
+        curl_close( $curl );
+        echo $response;
+
     }
 
 
@@ -153,12 +183,9 @@ class ProductSync {
         $sku           = 'jalalProduct123';
         $stock         = 200;
         $regular_price = 500;
-        $selling_price = 200;
+        $selling_price = 400;
         $description   = 'Stylish and sustainable, this wooden dining table is perfect for the environmentally conscious home. Solid wood and recycled sawdust are treated to a high-pressure lamination process to create this quality piece. The tabletop is stain, UV, light, and weather resistant for unparalleled durability. Also shock-resistant and break-proof, it stands up to heavy duty use. The smooth, rectangular top is supported by bold, angled leg supports for a striking design thats sure to make you look twice.';
         $brand         = 'Coaster';
-        $category      = '';
-        $images        = '';
-        $attributes    = '';
 
         // product array
         $productArray = [
@@ -175,23 +202,24 @@ class ProductSync {
                     ],
                     'parentSku'   => $sku,
                     'sellerSku'   => $sku,
-                    'barcodeEan'  => '1234567000001239999',
+                    'barcodeEan'  => '',
                     'variation'   => 1,
                     'brand'       => [ 'code' => 1126253, 'name' => $brand ],
                     'category'    => [ 'code' => 1004141, 'name' => 'Gaming / PC Gaming / Accessories / Controllers' ],
                     'images'      => [
-                        [ 'url' => 'https://lindorfurniture.com/wp-content/uploads/2024/02/192751_21x900.jpg', 'primary' => 1 ],
-                        [ 'url' => 'https://lindorfurniture.com/wp-content/uploads/2024/02/192751_1x900.jpg', 'primary' => 0 ],
+                        [ 'url' => 'https://lindorfurniture.com/wp-content/uploads/2024/02/192751_21x900.jpg', 'primary' => true ],
+                        [ 'url' => 'https://lindorfurniture.com/wp-content/uploads/2024/02/192751_1x900.jpg', 'primary' => false ],
                     ],
                     'price'       => [
                         'currency'  => 'EGP',
                         'value'     => $regular_price,
-                        'salePrice' => [ 'value' => $selling_price, 'startAt' => '', 'endAt' => '' ],
+                        'salePrice' => [ 'value' => $selling_price, 'startAt' => '2024-04-26', 'endAt' => '2026-04-20' ],
                     ],
                     'stock'       => $stock,
                     'attributes'  => [
                         [ 'name' => 'isbn', 'value' => '0-6280-1750-2' ],
                         [ 'name' => 'product_weight', 'value' => '10kg' ],
+                        [ 'name' => 'short_description', 'value' => '<ul><li>short description should have at least 4 bullets</li><li>short description&nbsp;</li><li>short description&nbsp;</li><li>short description&nbsp;</li></ul>' ],
                     ],
                 ],
             ],
@@ -347,28 +375,19 @@ $productSync = new ProductSync();
 /* Fetch products */
 /* echo '<pre>';
 print_r( $productSync->fetchProductsFromApi() );
-echo '</pre>';
+echo '</pre>'; */
 
 echo '<br>';
-echo '<pre>';
+
+/* echo '<pre>';
 print_r( $productSync->fetchProductsFromSheets() );
 echo '</pre>'; */
 
 
-/* perform operations here */
-$vendorProducts = $productSync->fetchProductsFromApi();
-/*echo '<pre>';
-print_r( $vendorProducts );
-echo '</pre>'; */
+/* perform product creation or update operations here */
+// $vendorProducts = $productSync->fetchProductsFromApi();
+// $googleProducts = $productSync->fetchProductsFromSheets();
+// $productSync->updateOrCreateProducts( $vendorProducts, $googleProducts );
 
-$googleProducts = $productSync->fetchProductsFromSheets();
-/*echo '<pre>';
-print_r( $googleProducts );
-echo '/<pre>';*/
-
-$productSync->updateOrCreateProducts( $vendorProducts, $googleProducts );
-
-/* Create and Update product manually */
-/* $productSync->create_new_product();
-echo "<br>";
-$productSync->update_existing_product(); */
+// get product status
+// $productSync->getProductStatus();
