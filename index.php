@@ -357,17 +357,6 @@ class ProductSync {
 
         echo "Product Updated with sku $sku, response is $response";
     }
-
-    public function synchronizeProducts() {
-        // Fetch products from the API
-        $vendorProducts = $this->fetchProductsFromApi();
-
-        // Fetch products from Google Sheets
-        $googleProducts = $this->fetchProductsFromSheets();
-
-
-
-    }
 }
 
 $productSync = new ProductSync();
