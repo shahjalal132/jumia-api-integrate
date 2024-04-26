@@ -104,34 +104,34 @@ class ProductSync {
         $responseMessage = '';
 
         foreach ( $vendorProducts as $vendorProduct ) {
-            $vendorSku = $vendorProduct['parentSku'];
-            $found     = false;
 
-            $googleSingleProduct = [];
+            // retrieve vendor sku
+            $vendorSku = $vendorProduct['parentSku'];
 
             foreach ( $googleProducts as $googleProduct ) {
-                $googleSingleProduct = $googleProduct;
-                $googleSku           = $googleProduct[2];
+
+                // retrieve google products sku
+                $googleSku = $googleProduct[2];
 
                 if ( $vendorSku === $googleSku ) {
+                    echo "Sku match with $googleSku updating... <br>";
+
                     // Update product
-                    $found = true;
-                    // Perform update logic here
-                    $this->update_existing_product();
-                    $responseMessage = "Product with SKU $googleSku already exists. Updating...\n";
-                    continue;
+                    /* $this->update_existing_product();
+                    $responseMessage = "Product with SKU $googleSku already exists. Updating...\n"; */
+                } else {
+                    // Create product
+                    echo "Product with SKU $googleSku not found. Creating... <br>";
+                    /* $productCreating = $this->create_new_product();
+                    $responseMessage = "Product with SKU $vendorSku not found. Creating... Response is $productCreating \n"; */
                 }
             }
 
-            if ( !$found ) {
-                // Create product
-                // Perform create logic here
-                $productCreating = $this->create_new_product();
-                $responseMessage = "Product with SKU $vendorSku not found. Creating... Response is $productCreating \n";
-            }
+            echo $responseMessage;
         }
 
         echo $responseMessage;
+        die( "stop here" );
     }
 
     public function getProductStatus() {
@@ -385,9 +385,9 @@ echo '</pre>'; */
 
 
 /* perform product creation or update operations here */
-// $vendorProducts = $productSync->fetchProductsFromApi();
-// $googleProducts = $productSync->fetchProductsFromSheets();
-// $productSync->updateOrCreateProducts( $vendorProducts, $googleProducts );
+$vendorProducts = $productSync->fetchProductsFromApi();
+$googleProducts = $productSync->fetchProductsFromSheets();
+$productSync->updateOrCreateProducts( $vendorProducts, $googleProducts );
 
 // get product status
 // $productSync->getProductStatus();
