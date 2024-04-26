@@ -104,7 +104,7 @@ class ProductSync {
         $responseMessage = '';
 
         foreach ( $vendorProducts as $vendorProduct ) {
-            $vendorSku = $vendorProduct['id'];
+            $vendorSku = $vendorProduct['parentSku'];
             $found     = false;
 
             $googleSingleProduct = [];
@@ -116,18 +116,18 @@ class ProductSync {
                 if ( $vendorSku == $googleSku ) {
                     // Update product
                     $found           = true;
-                    $responseMessage = "Product with SKU $googleSku already exists. Updating...\n";
                     // Perform update logic here
-                    $this->update_existing_product( $googleProduct );
-                    break;
+                    $this->update_existing_product();
+                    $responseMessage = "Product with SKU $googleSku already exists. Updating...\n";
+                    continue;
                 }
             }
 
             if ( !$found ) {
                 // Create product
-                $responseMessage = "Product with SKU $vendorSku not found. Creating...\n";
                 // Perform create logic here
-                $this->create_new_product( $googleSingleProduct );
+                $productCreating = $this->create_new_product();
+                $responseMessage = "Product with SKU $vendorSku not found. Creating... Response is $productCreating \n";
             }
         }
 
@@ -135,10 +135,10 @@ class ProductSync {
     }
 
 
-    public function create_new_product( $product ) {
+    public function create_new_product() {
 
         // extract product informations
-        $productName   = $product['1'] ?? null;
+        /* $productName   = $product['1'] ?? null;
         $sku           = $product['2'] ?? null;
         $stock         = $product['3'] ?? null;
         $regular_price = $product['4'] ?? null;
@@ -147,7 +147,18 @@ class ProductSync {
         $brand         = $product['7'] ?? null;
         $category      = $product['8'] ?? null;
         $images        = $product['9'] ?? null;
-        $attributes    = $product['10'] ?? null;
+        $attributes    = $product['10'] ?? null; */
+
+        $productName   = 'PARKERSBURG RECTANGLE DINING TABLE PALADINA AND NATURAL WALNUT';
+        $sku           = 'jalalProduct123';
+        $stock         = 200;
+        $regular_price = 500;
+        $selling_price = 200;
+        $description   = 'Stylish and sustainable, this wooden dining table is perfect for the environmentally conscious home. Solid wood and recycled sawdust are treated to a high-pressure lamination process to create this quality piece. The tabletop is stain, UV, light, and weather resistant for unparalleled durability. Also shock-resistant and break-proof, it stands up to heavy duty use. The smooth, rectangular top is supported by bold, angled leg supports for a striking design thats sure to make you look twice.';
+        $brand         = 'Coaster';
+        $category      = '';
+        $images        = '';
+        $attributes    = '';
 
         // product array
         $productArray = [
@@ -162,14 +173,15 @@ class ProductSync {
                         'value'        => $description,
                         'translations' => [],
                     ],
-                    'parentSku'   => '',
+                    'parentSku'   => $sku,
                     'sellerSku'   => $sku,
                     'barcodeEan'  => '1234567000001239999',
                     'variation'   => 1,
                     'brand'       => [ 'code' => 1126253, 'name' => $brand ],
                     'category'    => [ 'code' => 1004141, 'name' => 'Gaming / PC Gaming / Accessories / Controllers' ],
                     'images'      => [
-                        [ 'url' => 'https://ng.jumia.is/LgDWyaUAUqlaDlr6gmf0ui43GGk=/fit-in/500x500/filters:fill(white)/product/90/278208/1.jpg?4790', 'primary' => 1 ],
+                        [ 'url' => 'https://lindorfurniture.com/wp-content/uploads/2024/02/192751_21x900.jpg', 'primary' => 1 ],
+                        [ 'url' => 'https://lindorfurniture.com/wp-content/uploads/2024/02/192751_1x900.jpg', 'primary' => 0 ],
                     ],
                     'price'       => [
                         'currency'  => 'EGP',
@@ -179,6 +191,7 @@ class ProductSync {
                     'stock'       => $stock,
                     'attributes'  => [
                         [ 'name' => 'isbn', 'value' => '0-6280-1750-2' ],
+                        [ 'name' => 'product_weight', 'value' => '10kg' ],
                     ],
                 ],
             ],
@@ -213,10 +226,13 @@ class ProductSync {
 
         curl_close( $curl );
 
-        echo "product created $response";
+        return "product created $response";
     }
 
-    public function update_existing_product( $product ) {
+    public function update_existing_product() {
+
+        $sku = 'jalal114477';
+
         // product array
         $productArray = [
             'shopId'   => $this->shopID,
@@ -259,8 +275,8 @@ class ProductSync {
                         'value'        => 'Description should have more than 150 words.',
                         'translations' => [],
                     ],
-                    'parentSku'            => '',
-                    'sellerSku'            => 'jalal123456',
+                    'parentSku'            => $sku,
+                    'sellerSku'            => $sku,
                     'barcodeEan'           => '1234567000003459999',
                     'variation'            => 2,
                     'brand'                => [ 'code' => 1126253, 'name' => '123 updated' ],
@@ -311,7 +327,7 @@ class ProductSync {
 
         curl_close( $curl );
 
-        echo "Product Updated $response";
+        echo "Product Updated with sku $sku, response is $response";
     }
 
     public function synchronizeProducts() {
@@ -340,17 +356,17 @@ echo '</pre>'; */
 
 
 /* perform operations here */
-/* $vendorProducts = $productSync->fetchProductsFromApi();
-echo '<pre>';
+$vendorProducts = $productSync->fetchProductsFromApi();
+/*echo '<pre>';
 print_r( $vendorProducts );
-echo '</pre>';
+echo '</pre>'; */
 
 $googleProducts = $productSync->fetchProductsFromSheets();
-echo '<pre>';
+/*echo '<pre>';
 print_r( $googleProducts );
-echo '/<pre>'; */
+echo '/<pre>';*/
 
-// $productSync->updateOrCreateProducts( $vendorProducts, $googleProducts );
+$productSync->updateOrCreateProducts( $vendorProducts, $googleProducts );
 
 /* Create and Update product manually */
 /* $productSync->create_new_product();
