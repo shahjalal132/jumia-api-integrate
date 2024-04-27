@@ -117,12 +117,12 @@ class ProductSync {
                     echo "Sku match with $googleSku updating... <br>";
 
                     // Update product
-                    /* $this->update_existing_product();
+                    /* $this->updateExistingProduct();
                     $responseMessage = "Product with SKU $googleSku already exists. Updating...\n"; */
                 } else {
                     // Create product
                     echo "Product with SKU $googleSku not found. Creating... <br>";
-                    /* $productCreating = $this->create_new_product();
+                    /* $productCreating = $this->createNewProduct();
                     $responseMessage = "Product with SKU $vendorSku not found. Creating... Response is $productCreating \n"; */
                 }
             }
@@ -165,7 +165,7 @@ class ProductSync {
     }
 
 
-    public function create_new_product() {
+    public function createNewProduct() {
 
         // extract product informations
         /* $productName   = $product['1'] ?? null;
@@ -257,7 +257,7 @@ class ProductSync {
         return "product created $response";
     }
 
-    public function update_existing_product() {
+    public function updateExistingProduct() {
 
         $sku = 'jalal114477';
 
