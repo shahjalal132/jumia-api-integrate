@@ -1,4 +1,6 @@
-## Jumia API Integration
+## Jumia API Integration with Google Sheet API
+
+## Overview
 
 An E-commerce API. All Products stored into a google sheet. Fetching from Google sheet and Create or Update product the vendor store.
 
@@ -21,7 +23,7 @@ An E-commerce API. All Products stored into a google sheet. Fetching from Google
 - API was not ready and has some issues. I Had to research and contact with Jumia support team and fix it.
 - Google sheet API. I didn't know that. I had to learn it.
 - Business logic was not clear for me. I had to research and implement it.
-- First Code write Procedural style. Then I had to use OOP.
+- First the code was written procedural way. Then I changed it to object oriented way.
 
 ## How to use
 
@@ -35,6 +37,7 @@ An E-commerce API. All Products stored into a google sheet. Fetching from Google
 
 - PHP
 - Composer
+- Jumia API
 - Google API PHP Client
 - Google Sheets API PHP Client
 
