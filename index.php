@@ -21,8 +21,8 @@ class ProductSync {
         $this->spreadsheetID = '1igZQ5L-FlY7FTzqMpxPOzbscWLYo15hLW5s9YHwPRD4';
         $this->sheetRange    = 'products!A:K'; // Retrieve all products
         // $this->sheetRange    = 'products!A2:K2'; // Retrieve one product
-        $this->shopID        = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
-        $this->accessToken   = $this->generateAccessToken();
+        $this->shopID      = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
+        $this->accessToken = $this->generateAccessToken();
     }
 
     public function generateAccessToken() {
@@ -135,7 +135,7 @@ class ProductSync {
 
     public function getProductStatus() {
 
-        $feedId = '3985a08a-0c8d-461e-a607-b134816a540f';
+        $feedId = '988df395-b521-4cc4-a6ec-4b4f06f2ccd8';
 
         $curl = curl_init();
 
@@ -367,6 +367,50 @@ class ProductSync {
 
         echo "Product Updated with sku $sku, response is $response";
     }
+
+    public function updateProductStock() {
+
+        $curl = curl_init();
+
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL            => 'https://vendor-api-staging.jumia.com/feeds/products/stock',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING       => '',
+                CURLOPT_MAXREDIRS      => 10,
+                CURLOPT_TIMEOUT        => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST  => 'POST',
+                CURLOPT_POSTFIELDS     => '{
+                    "products": [
+                        {
+                        "sellerSku": "jalal4556",
+                        "id": "3a1047e4-a9e2-3c9d-88a3-cfcdb906cf41",
+                        "stock": 500
+                        },
+                        {
+                        "sellerSku": "jalal4556",
+                        "id": "3a1047e4-a9e2-3c9d-88a3-cfcdb906cf41",
+                        "stock": 50
+                        }
+                    ]
+                    }',
+                CURLOPT_HTTPHEADER     => array(
+                    'Authorization: Bearer ' . $this->accessToken,
+                    'Content-Type: application/json',
+                    'Cookie: __cf_bm=J.KuHSJ9RPzg0mXYMQJthrq5C1vsLZVV_c09qWXUzHI-1713786910-1.0.1.1-RxUQQR7OTwiBw46hjN2C2UKiN_SXEuuayY7ujq0kv_XUXeROozkcrW_ytbB57A1AIRgtwpRaZ9h1c3J2XveoQQ',
+                ),
+            )
+        );
+
+        $response = curl_exec( $curl );
+
+        curl_close( $curl );
+        echo $response;
+
+    }
 }
 
 $productSync = new ProductSync();
@@ -388,8 +432,8 @@ echo '</pre>'; */
 // $googleProducts = $productSync->fetchProductsFromSheets();
 // $productSync->updateOrCreateProducts( $vendorProducts, $googleProducts );
 
-// Create product manually
-// echo $productSync->createNewProduct();
-
 // get product status
 // $productSync->getProductStatus();
+
+// update product stock
+// $productSync->updateProductStock();
