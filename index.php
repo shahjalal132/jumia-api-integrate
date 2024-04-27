@@ -118,20 +118,17 @@ class ProductSync {
 
                     // Update product
                     /* $this->updateExistingProduct();
-                    $responseMessage = "Product with SKU $googleSku already exists. Updating...\n"; */
+                    $responseMessage .= "Product with SKU $googleSku already exists. Updating...<br>"; */
                 } else {
                     // Create product
                     echo "Product with SKU $googleSku not found. Creating... <br>";
                     /* $productCreating = $this->createNewProduct();
-                    $responseMessage = "Product with SKU $vendorSku not found. Creating... Response is $productCreating \n"; */
+                    $responseMessage .= "Product with SKU $vendorSku not found. Creating... Response is $productCreating <br>"; */
                 }
             }
-
-            echo $responseMessage;
         }
 
         echo $responseMessage;
-        die( "stop here" );
     }
 
     public function getProductStatus() {
@@ -259,7 +256,25 @@ class ProductSync {
 
     public function updateExistingProduct() {
 
-        $sku = 'jalal114477';
+        // extract product informations
+        $productName  = '';
+        $description  = '';
+        $sku          = '';
+        $brand        = [ 'code' => 1126253, 'name' => 'Coaster' ];
+        $category     = [ 'code' => 1004141, 'name' => 'Gaming / PC Gaming / Controllers' ];
+        $images       = [
+            [ 'url' => 'https://lindorfurniture.com/wp-content/uploads/2024/02/192751_21x900.jpg', 'primary' => true ],
+            [ 'url' => 'https://lindorfurniture.com/wp-content/uploads/2024/02/192751_1x900.jpg', 'primary' => false ],
+        ];
+        $regularPrice = 200;
+        $salePrice    = [ 'value' => 150, 'startAt' => '2022-08-11 15:00', 'endAt' => '2022-08-22 17:00' ];
+        $stock        = 500;
+        $attributes   = [
+            [ 'name' => 'isbn', 'value' => '0-6280-1750-2' ],
+            [ 'name' => 'product_weight', 'value' => '0.2kg' ],
+        ];
+        $barCodeEan   = '';
+        $variation    = 1;
 
         // product array
         $productArray = [
@@ -267,61 +282,51 @@ class ProductSync {
             'products' => [
                 [
                     'name'                 => [
-                        'value'        => 'Name of one variation of the product between 15 and 60 characters jalal',
+                        'value'        => $productName,
                         'translations' => [],
                     ],
                     'description'          => [
-                        'value'        => 'Description should have more than 150 words.',
+                        'value'        => $description,
                         'translations' => [],
                     ],
                     'parentSku'            => '',
-                    'sellerSku'            => 'new_product_sku_jalal',
-                    'barcodeEan'           => '1234567000001239999',
-                    'variation'            => 1,
-                    'brand'                => [ 'code' => 1126253, 'name' => '123 updated' ],
-                    'category'             => [ 'code' => 1004141, 'name' => 'Gaming / PC Gaming / Accessories / Controllers' ],
+                    'sellerSku'            => $sku,
+                    'barcodeEan'           => $sku,
+                    'variation'            => $variation,
+                    'brand'                => $brand,
+                    'category'             => $category,
                     'additionalCategories' => [],
-                    'images'               => [
-                        [ 'url' => 'https://ng.jumia.is/LgDWyaUAUqlaDlr6gmf0ui43GGk=/fit-in/500x500/filters:fill(white)/product/90/278208/1.jpg?4790', 'primary' => 1 ],
-                        [ 'url' => 'https://ng.jumia.is/W-t47t1CIN1cl_y6KcnaM5Z-PjM=/fit-in/500x500/filters:fill(white)/product/90/278208/2.jpg?4790', 'primary' => null ],
-                    ],
+                    'images'               => $images,
                     'price'                => [
-                        'value'     => 200,
-                        'salePrice' => [ 'value' => 150, 'startAt' => '2022-08-11 15:00', 'endAt' => '2022-08-22 17:00' ],
+                        'value'     => $regularPrice,
+                        'salePrice' => $salePrice,
                     ],
-                    'stock'                => 500,
-                    'attributes'           => [
-                        [ 'name' => 'isbn', 'value' => '0-6280-1750-2' ],
-                    ],
+                    'stock'                => $stock,
+                    'attributes'           => $attributes,
                 ],
                 [
                     'name'                 => [
-                        'value'        => 'Name of another variation of the product between 15 and 60 characters',
+                        'value'        => $productName,
                         'translations' => [],
                     ],
                     'description'          => [
-                        'value'        => 'Description should have more than 150 words.',
+                        'value'        => $description,
                         'translations' => [],
                     ],
                     'parentSku'            => $sku,
                     'sellerSku'            => $sku,
-                    'barcodeEan'           => '1234567000003459999',
-                    'variation'            => 2,
-                    'brand'                => [ 'code' => 1126253, 'name' => '123 updated' ],
-                    'category'             => [ 'code' => 1004141, 'name' => 'Gaming / PC Gaming / Accessories / Controllers' ],
+                    'barcodeEan'           => $barCodeEan,
+                    'variation'            => $variation,
+                    'brand'                => $brand,
+                    'category'             => $category,
                     'additionalCategories' => [],
-                    'images'               => [
-                        [ 'url' => 'https://ng.jumia.is/LgDWyaUAUqlaDlr6gmf0ui43GGk=/fit-in/500x500/filters:fill(white)/product/90/278208/1.jpg?4790', 'primary' => 1 ],
-                        [ 'url' => 'https://ng.jumia.is/W-t47t1CIN1cl_y6KcnaM5Z-PjM=/fit-in/500x500/filters:fill(white)/product/90/278208/2.jpg?4790', 'primary' => null ],
-                    ],
+                    'images'               => $images,
                     'price'                => [
-                        'value'     => 200,
-                        'salePrice' => [ 'value' => 150, 'startAt' => '2022-08-11 15:00', 'endAt' => '2022-08-22 17:00' ],
+                        'value'     => $regularPrice,
+                        'salePrice' => $salePrice,
                     ],
-                    'stock'                => 500,
-                    'attributes'           => [
-                        [ 'name' => 'isbn', 'value' => '0-6280-1750-2' ],
-                    ],
+                    'stock'                => $stock,
+                    'attributes'           => $attributes,
                 ],
             ],
         ];
