@@ -19,7 +19,8 @@ class ProductSync {
         $this->client->setAuthConfig( $this->credentialsPath );
         $this->service       = new Google_Service_Sheets( $this->client );
         $this->spreadsheetID = '1igZQ5L-FlY7FTzqMpxPOzbscWLYo15hLW5s9YHwPRD4';
-        $this->sheetRange    = 'products!A:K';
+        $this->sheetRange    = 'products!A:K'; // Retrieve all products
+        // $this->sheetRange    = 'products!A2:K2'; // Retrieve one product
         $this->shopID        = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
         $this->accessToken   = $this->generateAccessToken();
     }
@@ -121,9 +122,10 @@ class ProductSync {
                     $responseMessage .= "Product with SKU $googleSku already exists. Updating...<br>"; */
                 } else {
                     // Create product
-                    echo "Product with SKU $googleSku not found. Creating... <br>";
-                    /* $productCreating = $this->createNewProduct();
-                    $responseMessage .= "Product with SKU $vendorSku not found. Creating... Response is $productCreating <br>"; */
+                    // echo "Product with SKU $googleSku not found. Creating... <br>";
+
+                    $productCreating = $this->createNewProduct();
+                    $responseMessage .= "Product with SKU $vendorSku not found. Creating... Response is $productCreating <br>";
                 }
             }
         }
@@ -133,7 +135,7 @@ class ProductSync {
 
     public function getProductStatus() {
 
-        $feedId = 'b9a89294-300e-4a40-9942-7dd689674751';
+        $feedId = '3985a08a-0c8d-461e-a607-b134816a540f';
 
         $curl = curl_init();
 
@@ -176,13 +178,23 @@ class ProductSync {
         $images        = $product['9'] ?? null;
         $attributes    = $product['10'] ?? null; */
 
-        $productName   = 'PARKERSBURG RECTANGLE DINING TABLE PALADINA AND NATURAL WALNUT';
-        $sku           = 'jalalProduct123';
+        $productName   = 'MARIETTA UPHOLSTERED GAME CHAIR TOBACCO AND TAN';
+        $sku           = 'jalal1024';
         $stock         = 200;
         $regular_price = 500;
-        $selling_price = 400;
-        $description   = 'Stylish and sustainable, this wooden dining table is perfect for the environmentally conscious home. Solid wood and recycled sawdust are treated to a high-pressure lamination process to create this quality piece. The tabletop is stain, UV, light, and weather resistant for unparalleled durability. Also shock-resistant and break-proof, it stands up to heavy duty use. The smooth, rectangular top is supported by bold, angled leg supports for a striking design thats sure to make you look twice.';
-        $brand         = 'Coaster';
+        $selling_price = [ 'value' => 350, 'startAt' => '2024-04-26', 'endAt' => '2026-04-20' ];
+        $description   = 'Infuse your recreation room with cool, casual comfort. This game chair pairs perfectly with the popular Marietta game table. Upholstered with soft tan fabric, its fashionable look is rounded out by the striking X-shaped design of its wooden arm rests. Five casters are attached to its attractive, tobacco colored base, allowing for plenty of freedom of movement. A thick, cushy seat allows you and your guests to comfortably settle into for hours upon hours of rousing game play.';
+        $brand         = [ 'code' => 1126253, 'name' => 'Coaster' ];
+        $category      = [ 'code' => 1004141, 'name' => 'Controllers' ];
+        $barCodeEan    = '1234567890128';
+        $images        = [
+            [ 'url' => 'https://lindorfurniture.com/wp-content/uploads/2024/01/100172_01x900.jpg', 'primary' => true ],
+            [ 'url' => 'https://lindorfurniture.com/wp-content/uploads/2024/01/100172_02x900.jpg', 'primary' => false ],
+        ];
+        $attributes    = [
+            [ 'name' => 'product_weight', 'value' => '10kg' ],
+            [ 'name' => 'short_description', 'value' => '<ul><li>Collection: MARIETTA GAME TABLE</li><li>Main Color: Brown</li><li>Main Material: Wood</li><li>Main Finish: Tobacco</li></ul>' ],
+        ];
 
         // product array
         $productArray = [
@@ -199,25 +211,18 @@ class ProductSync {
                     ],
                     'parentSku'   => $sku,
                     'sellerSku'   => $sku,
-                    'barcodeEan'  => '',
+                    'barcodeEan'  => $barCodeEan,
                     'variation'   => 1,
-                    'brand'       => [ 'code' => 1126253, 'name' => $brand ],
-                    'category'    => [ 'code' => 1004141, 'name' => 'Gaming / PC Gaming / Accessories / Controllers' ],
-                    'images'      => [
-                        [ 'url' => 'https://lindorfurniture.com/wp-content/uploads/2024/02/192751_21x900.jpg', 'primary' => true ],
-                        [ 'url' => 'https://lindorfurniture.com/wp-content/uploads/2024/02/192751_1x900.jpg', 'primary' => false ],
-                    ],
+                    'brand'       => $brand,
+                    'category'    => $category,
+                    'images'      => $images,
                     'price'       => [
                         'currency'  => 'EGP',
                         'value'     => $regular_price,
-                        'salePrice' => [ 'value' => $selling_price, 'startAt' => '2024-04-26', 'endAt' => '2026-04-20' ],
+                        'salePrice' => $selling_price,
                     ],
                     'stock'       => $stock,
-                    'attributes'  => [
-                        [ 'name' => 'isbn', 'value' => '0-6280-1750-2' ],
-                        [ 'name' => 'product_weight', 'value' => '10kg' ],
-                        [ 'name' => 'short_description', 'value' => '<ul><li>short description should have at least 4 bullets</li><li>short description&nbsp;</li><li>short description&nbsp;</li><li>short description&nbsp;</li></ul>' ],
-                    ],
+                    'attributes'  => $attributes,
                 ],
             ],
         ];
@@ -371,7 +376,7 @@ $productSync = new ProductSync();
 print_r( $productSync->fetchProductsFromApi() );
 echo '</pre>'; */
 
-echo '<br>';
+// echo '<br>';
 
 /* echo '<pre>';
 print_r( $productSync->fetchProductsFromSheets() );
@@ -379,9 +384,12 @@ echo '</pre>'; */
 
 
 /* perform product creation or update operations here */
-$vendorProducts = $productSync->fetchProductsFromApi();
-$googleProducts = $productSync->fetchProductsFromSheets();
-$productSync->updateOrCreateProducts( $vendorProducts, $googleProducts );
+// $vendorProducts = $productSync->fetchProductsFromApi();
+// $googleProducts = $productSync->fetchProductsFromSheets();
+// $productSync->updateOrCreateProducts( $vendorProducts, $googleProducts );
+
+// Create product manually
+// echo $productSync->createNewProduct();
 
 // get product status
 // $productSync->getProductStatus();
