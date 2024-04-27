@@ -40,4 +40,4 @@ An E-commerce API. All Products stored into a google sheet. Fetching from Google
 
 ## Author
 
-- [Muhammad Shah jalal](https://github.com/shahjalal132)
+[Muhammad Shah jalal](https://github.com/shahjalal132)
