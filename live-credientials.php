@@ -128,6 +128,33 @@ class ProductSync {
 
     }
 
+    public function getProductStocks() {
+
+        $curl = curl_init();
+
+        curl_setopt_array( $curl, array(
+            CURLOPT_URL            => 'https://vendor-api.jumia.com/catalog/stock?size=1',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING       => '',
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST  => 'GET',
+            CURLOPT_HTTPHEADER     => array(
+                'Authorization: Bearer ' . $this->accessToken,
+                'Cookie: __cf_bm=zovnSqgeFsnk5zh.JHAhApYfqzQ_FPuQ4Nz5wUpH1mo-1714277005-1.0.1.1-O6_F6V1QcPzQh1OUqrdXj_mvRf0sQQocYpwGiBHwQF7k2A7fxJ9syEEcN.bIGg2NaQ6LyvrVYWSqlV7MzThpNg',
+            ),
+        )
+        );
+
+        $response = curl_exec( $curl );
+
+        curl_close( $curl );
+        echo $response;
+
+    }
+
     public function updateProductStock() {
 
         // product 
