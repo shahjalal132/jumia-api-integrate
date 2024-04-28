@@ -98,39 +98,6 @@ class ProductSync {
         return $response->getValues();
     }
 
-    public function updateOrCreateProducts( $vendorProducts, $googleProducts ) {
-
-        $responseMessage = '';
-
-        foreach ( $vendorProducts as $vendorProduct ) {
-
-            // retrieve vendor sku
-            $vendorSku = $vendorProduct['parentSku'];
-
-            foreach ( $googleProducts as $googleProduct ) {
-
-                // retrieve google products sku
-                $googleSku = $googleProduct[2];
-
-                if ( $vendorSku === $googleSku ) {
-                    echo "Sku match with $googleSku updating... <br>";
-
-                    // Update product
-                    /* $this->updateExistingProduct();
-                    $responseMessage .= "Product with SKU $googleSku already exists. Updating...<br>"; */
-                } else {
-                    // Create product
-                    // echo "Product with SKU $googleSku not found. Creating... <br>";
-
-                    $productCreating = $this->createNewProduct();
-                    $responseMessage .= "Product with SKU $vendorSku not found. Creating... Response is $productCreating <br>";
-                }
-            }
-        }
-
-        echo $responseMessage;
-    }
-
     public function getProductStatus() {
 
         $feedId = '988df395-b521-4cc4-a6ec-4b4f06f2ccd8';
@@ -221,12 +188,6 @@ echo '</pre>'; */
 /* echo '<pre>';
 print_r( $productSync->fetchProductsFromSheets() );
 echo '</pre>'; */
-
-
-/* perform product creation or update operations here */
-// $vendorProducts = $productSync->fetchProductsFromApi();
-// $googleProducts = $productSync->fetchProductsFromSheets();
-// $productSync->updateOrCreateProducts( $vendorProducts, $googleProducts );
 
 // get product status
 // $productSync->getProductStatus();
