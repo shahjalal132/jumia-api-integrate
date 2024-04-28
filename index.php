@@ -198,8 +198,8 @@ class ProductSync {
         $productInfoFromSheet = $this->fetchProductsFromSheets();
 
         foreach ( $productInfoFromSheet as $product ) {
-            $sku   = $product[0] ?? null;
-            $id    = $product[1] ?? null;
+            $sku   = $product[0] ?? '';
+            $id    = $product[1] ?? '';
             $stock = $product[2] ?? 0;
             $price = $product[3] ?? 0;
 
