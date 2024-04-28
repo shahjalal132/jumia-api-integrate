@@ -10,6 +10,8 @@ class ProductSync {
     private $credentialsPath = __DIR__ . '/credentials.json';
     private $accessToken;
     private $shopID;
+    private $sellerSku;
+    private $id;
 
     public function __construct() {
         $this->client = new Google\Client();
@@ -22,6 +24,8 @@ class ProductSync {
         $this->sheetRange    = 'products!A:K'; // Retrieve all products
         // $this->sheetRange    = 'products!A2:K2'; // Retrieve one product
         $this->shopID      = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
+        $this->sellerSku   = 'BL828';
+        $this->id          = '2d1c6557-0918-428f-91fb-64a39ba05f4c';
         $this->accessToken = $this->generateAccessToken();
     }
 
@@ -62,14 +66,14 @@ class ProductSync {
 
     public function getProductStatus() {
 
-        $feedId = '988df395-b521-4cc4-a6ec-4b4f06f2ccd8';
+        $feedId = '8294756b-b82d-4492-94e9-8b9028613def';
 
         $curl = curl_init();
 
         curl_setopt_array(
             $curl,
             array(
-                CURLOPT_URL            => 'https://vendor-api-staging.jumia.com/feeds/' . $feedId,
+                CURLOPT_URL            => 'https://vendor-api.jumia.com/feeds/' . $feedId,
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING       => '',
                 CURLOPT_MAXREDIRS      => 10,
@@ -94,20 +98,22 @@ class ProductSync {
 
         $curl = curl_init();
 
-        curl_setopt_array( $curl, array(
-            CURLOPT_URL            => 'https://vendor-api.jumia.com/catalog/stock?size=1',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING       => '',
-            CURLOPT_MAXREDIRS      => 10,
-            CURLOPT_TIMEOUT        => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST  => 'GET',
-            CURLOPT_HTTPHEADER     => array(
-                'Authorization: Bearer ' . $this->accessToken,
-                'Cookie: __cf_bm=zovnSqgeFsnk5zh.JHAhApYfqzQ_FPuQ4Nz5wUpH1mo-1714277005-1.0.1.1-O6_F6V1QcPzQh1OUqrdXj_mvRf0sQQocYpwGiBHwQF7k2A7fxJ9syEEcN.bIGg2NaQ6LyvrVYWSqlV7MzThpNg',
-            ),
-        )
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL            => 'https://vendor-api.jumia.com/catalog/stock?size=1',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING       => '',
+                CURLOPT_MAXREDIRS      => 10,
+                CURLOPT_TIMEOUT        => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST  => 'GET',
+                CURLOPT_HTTPHEADER     => array(
+                    'Authorization: Bearer ' . $this->accessToken,
+                    'Cookie: __cf_bm=zovnSqgeFsnk5zh.JHAhApYfqzQ_FPuQ4Nz5wUpH1mo-1714277005-1.0.1.1-O6_F6V1QcPzQh1OUqrdXj_mvRf0sQQocYpwGiBHwQF7k2A7fxJ9syEEcN.bIGg2NaQ6LyvrVYWSqlV7MzThpNg',
+                ),
+            )
         );
 
         $response = curl_exec( $curl );
@@ -119,14 +125,15 @@ class ProductSync {
 
     public function updateProductStock() {
 
-        // product 
+        $stock     = 5;
 
+        // product array
         $productArray = [
             "products" => [
                 [
-                    "sellerSku" => "BL828",
-                    "id"        => "2d1c6557-0918-428f-91fb-64a39ba05f4c",
-                    "stock"     => 4,
+                    "sellerSku" => $this->sellerSku,
+                    "id"        => $this->id,
+                    "stock"     => $stock,
                 ],
             ],
         ];
@@ -166,16 +173,18 @@ class ProductSync {
 
     public function updateProductPrice() {
 
+        $price     = 800;
+
         // product array
         $productArray = [
             'products' => [
                 [
-                    'sellerSku' => 'BL828',
-                    'id'        => '2d1c6557-0918-428f-91fb-64a39ba05f4c',
+                    'sellerSku' => $this->sellerSku,
+                    'id'        => $this->id,
                     'category'  => null,
                     'price'     => [
                         'currency'  => 'MAD',
-                        'value'     => 888,
+                        'value'     => $price,
                         'salePrice' => [
                             'value'   => null,
                             'startAt' => null,
@@ -220,3 +229,15 @@ class ProductSync {
 }
 
 $productSync = new ProductSync();
+
+// get product status
+// $productSync->getProductStatus();
+
+// get product stocks
+// $productSync->getProductStocks();
+
+// updaate prodcut stocks
+// $productSync->updateProductStock();
+
+// update product price
+// $productSync->updateProductPrice();
