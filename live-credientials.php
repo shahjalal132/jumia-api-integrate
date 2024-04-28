@@ -10,8 +10,6 @@ class ProductSync {
     private $credentialsPath = __DIR__ . '/credentials.json';
     private $accessToken;
     private $shopID;
-    private $sellerSku;
-    private $id;
 
     public function __construct() {
         $this->client = new Google\Client();
@@ -21,11 +19,9 @@ class ProductSync {
         $this->client->setAuthConfig( $this->credentialsPath );
         $this->service       = new Google_Service_Sheets( $this->client );
         $this->spreadsheetID = '1igZQ5L-FlY7FTzqMpxPOzbscWLYo15hLW5s9YHwPRD4';
-        $this->sheetRange    = 'products!A:K'; // Retrieve all products
-        // $this->sheetRange    = 'products!A2:K2'; // Retrieve one product
+        $this->sheetRange    = 'products!A:D'; // Retrieve all products
+        // $this->sheetRange    = 'products!C1464:E1464'; // Retrieve one product
         $this->shopID      = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
-        $this->sellerSku   = 'BL828';
-        $this->id          = '2d1c6557-0918-428f-91fb-64a39ba05f4c';
         $this->accessToken = $this->generateAccessToken();
     }
 
@@ -66,7 +62,7 @@ class ProductSync {
 
     public function getProductStatus() {
 
-        $feedId = '8294756b-b82d-4492-94e9-8b9028613def';
+        $feedId = 'c7cf573f-d8bf-4e83-bf11-56ffc29a5c69';
 
         $curl = curl_init();
 
@@ -94,46 +90,18 @@ class ProductSync {
 
     }
 
-    public function getProductStocks() {
+    public function updateProductStock( $sku, $id, $stock ) {
 
-        $curl = curl_init();
-
-        curl_setopt_array(
-            $curl,
-            array(
-                CURLOPT_URL            => 'https://vendor-api.jumia.com/catalog/stock?size=1',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING       => '',
-                CURLOPT_MAXREDIRS      => 10,
-                CURLOPT_TIMEOUT        => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST  => 'GET',
-                CURLOPT_HTTPHEADER     => array(
-                    'Authorization: Bearer ' . $this->accessToken,
-                    'Cookie: __cf_bm=zovnSqgeFsnk5zh.JHAhApYfqzQ_FPuQ4Nz5wUpH1mo-1714277005-1.0.1.1-O6_F6V1QcPzQh1OUqrdXj_mvRf0sQQocYpwGiBHwQF7k2A7fxJ9syEEcN.bIGg2NaQ6LyvrVYWSqlV7MzThpNg',
-                ),
-            )
-        );
-
-        $response = curl_exec( $curl );
-
-        curl_close( $curl );
-        echo $response;
-
-    }
-
-    public function updateProductStock() {
-
-        $stock     = 5;
+        if ( '' == $sku )
+            return;
 
         // product array
         $productArray = [
             "products" => [
                 [
-                    "sellerSku" => $this->sellerSku,
-                    "id"        => $this->id,
-                    "stock"     => $stock,
+                    "sellerSku" => $sku,
+                    "id"        => $id,
+                    "stock"     => intval( $stock ),
                 ],
             ],
         ];
@@ -166,25 +134,24 @@ class ProductSync {
         $response = curl_exec( $curl );
 
         curl_close( $curl );
-        echo $response;
-
-
+        return $response;
     }
 
-    public function updateProductPrice() {
+    public function updateProductPrice( $sku, $id, $price ) {
 
-        $price     = 800;
+        if ( '' == $sku )
+            return;
 
         // product array
         $productArray = [
             'products' => [
                 [
-                    'sellerSku' => $this->sellerSku,
-                    'id'        => $this->id,
+                    'sellerSku' => $sku,
+                    'id'        => $id,
                     'category'  => null,
                     'price'     => [
                         'currency'  => 'MAD',
-                        'value'     => $price,
+                        'value'     => intval( $price ),
                         'salePrice' => [
                             'value'   => null,
                             'startAt' => null,
@@ -223,21 +190,54 @@ class ProductSync {
         $response = curl_exec( $curl );
 
         curl_close( $curl );
-        echo $response;
+        return $response;
 
+    }
+
+    public function updateStockPrice() {
+        $productInfoFromSheet = $this->fetchProductsFromSheets();
+
+        foreach ( $productInfoFromSheet as $product ) {
+            $sku   = $product[0] ?? null;
+            $id    = $product[1] ?? null;
+            $stock = $product[2] ?? 0;
+            $price = $product[3] ?? 0;
+
+            // Update product stock
+            $stockUpdated = $this->updateProductStock( $sku, $id, $stock );
+            if ( !$stockUpdated ) {
+                echo "Failed to update stock for product with SKU: $sku <br>";
+                continue; // Skip to the next product if stock update fails
+            }
+
+            echo $stockUpdated;
+
+            // Update product price
+            $priceUpdated = $this->updateProductPrice( $sku, $id, $price );
+            if ( !$priceUpdated ) {
+                echo "Failed to update price for product with SKU: $sku <br>";
+                continue; // Skip to the next product if price update fails
+            }
+
+            echo $priceUpdated;
+
+            echo "Product Updated <br>";
+        }
     }
 }
 
 $productSync = new ProductSync();
+// $productSync->updateStockPrice();
 
 // get product status
 // $productSync->getProductStatus();
-
-// get product stocks
-// $productSync->getProductStocks();
 
 // updaate prodcut stocks
 // $productSync->updateProductStock();
 
 // update product price
 // $productSync->updateProductPrice();
+
+// get product from sheet
+// echo '<pre>';
+// print_r( $productSync->fetchProductsFromSheets() );
