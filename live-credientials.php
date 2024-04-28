@@ -55,44 +55,6 @@ class ProductSync {
         return $response['access_token'];
     }
 
-    /**
-     * Fetches products from the Jumia API.
-     *
-     * @return string The JSON-encoded products data retrieved from the API.
-     */
-    public function fetchProductsFromApi() {
-        $curl = curl_init();
-
-        curl_setopt_array(
-            $curl,
-            array(
-                CURLOPT_URL            => 'https://vendor-api.jumia.com/catalog/products?size=100',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING       => '',
-                CURLOPT_MAXREDIRS      => 10,
-                CURLOPT_TIMEOUT        => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST  => 'GET',
-                CURLOPT_HTTPHEADER     => array(
-                    'Authorization: Bearer ' . $this->accessToken
-                ),
-            )
-        );
-
-        $response = curl_exec( $curl );
-
-        curl_close( $curl );
-        // convert to array $response
-        $response = json_decode( $response, true );
-        return $response;
-    }
-
-    /**
-     * Fetch product from google sheet
-     *
-     * @return array The JSON-encoded products data retrieved from the API.
-     */
     public function fetchProductsFromSheets() {
         $response = $this->service->spreadsheets_values->get( $this->spreadsheetID, $this->sheetRange );
         return $response->getValues();
@@ -258,20 +220,3 @@ class ProductSync {
 }
 
 $productSync = new ProductSync();
-
-/* Fetch products */
-/* echo '<pre>';
-print_r( $productSync->fetchProductsFromApi() );
-echo '</pre>'; */
-
-// echo '<br>';
-
-/* echo '<pre>';
-print_r( $productSync->fetchProductsFromSheets() );
-echo '</pre>'; */
-
-// get product status
-// $productSync->getProductStatus();
-
-// update product stock
-// $productSync->updateProductStock();
