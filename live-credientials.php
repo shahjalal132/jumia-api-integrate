@@ -31,7 +31,7 @@ class ProductSync {
         curl_setopt_array(
             $curl,
             array(
-                CURLOPT_URL            => 'https://vendor-api-staging.jumia.com/token',
+                CURLOPT_URL            => 'https://vendor-api.jumia.com/token',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING       => '',
                 CURLOPT_MAXREDIRS      => 10,
@@ -39,10 +39,9 @@ class ProductSync {
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST  => 'POST',
-                CURLOPT_POSTFIELDS     => 'client_id=740b9a6d-1f91-4687-8250-e49b0159df40&grant_type=refresh_token&refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJiYTZkNTJjOS1mYTU4LTRiMzItYmU0OC00NDk1ZWNkODUxYTkifQ.eyJqdGkiOiI3NWIwMmFkZC1lMjY3LTQ1ZTgtYmZmMy01NmFlNzYxNGI2MGIiLCJleHAiOjE3NDUzMjAxODYsIm5iZiI6MCwiaWF0IjoxNzEzNzg0MTg2LCJpc3MiOiJodHRwczovL3ZlbmRvci1hcGktc3RhZ2luZy5qdW1pYS5jb20vYXV0aC9yZWFsbXMvYWNsIiwiYXVkIjoiaHR0cHM6Ly92ZW5kb3ItYXBpLXN0YWdpbmcuanVtaWEuY29tL2F1dGgvcmVhbG1zL2FjbCIsInN1YiI6ImFiMTNlNWJjLTExODYtNDBlOS04NzAxLTdiMzE5ZDQzN2ZhZSIsInR5cCI6IlJlZnJlc2giLCJhenAiOiI3NDBiOWE2ZC0xZjkxLTQ2ODctODI1MC1lNDliMDE1OWRmNDAiLCJhdXRoX3RpbWUiOjAsInNlc3Npb25fc3RhdGUiOiJiZTgwNjA5ZS1hNTNiLTRmYjktOTFjMy1kMzc4YTVkZTYxNzUiLCJzY29wZSI6InByb2ZpbGUgZW1haWwifQ.G8egLY5WAd3tr_HHs_Kbv9dxsU9Ye4qoJMTQEsf8JDc',
+                CURLOPT_POSTFIELDS     => 'client_id=784e325d-e0a9-4dab-a751-01113d9a4a86&grant_type=refresh_token&refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIyYTVmOTE3Zi1jNDRlLTQ3MWEtYTRiZC03NDE1NWU1ODYwZGIifQ.eyJqdGkiOiI2ODU2NzI1YS0wMjNmLTQ2NDAtOWMzMC01M2NjZDUwMDc2NWMiLCJleHAiOjE3NDU3NTE3NDMsIm5iZiI6MCwiaWF0IjoxNzE0MjE1NzQzLCJpc3MiOiJodHRwczovL3ZlbmRvci1hcGkuanVtaWEuY29tL2F1dGgvcmVhbG1zL2FjbCIsImF1ZCI6Imh0dHBzOi8vdmVuZG9yLWFwaS5qdW1pYS5jb20vYXV0aC9yZWFsbXMvYWNsIiwic3ViIjoiZTcyZTgxYmYtNTA4OS00N2IyLTlmMGQtZjA1ODg1Y2JmY2VmIiwidHlwIjoiUmVmcmVzaCIsImF6cCI6Ijc4NGUzMjVkLWUwYTktNGRhYi1hNzUxLTAxMTEzZDlhNGE4NiIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6Ijk0ZjkzNzVhLWM2NjMtNDM1Zi04MmI0LWRiMjkxNzdmN2Y5MSIsInNjb3BlIjoicHJvZmlsZSBlbWFpbCJ9.DR5gM7U97-Rapp5pKGLkTpZkC7IgAc5ILciLNG-sa_k',
                 CURLOPT_HTTPHEADER     => array(
                     'Content-Type: application/x-www-form-urlencoded',
-                    'Cookie: __cf_bm=98toz4aPL5L9z4W9VHuxRT3ed1D3Bg4VlXU0YFbf_Ls-1714017926-1.0.1.1-F8DKfmNyoukG0VjsEOD8Iyg3ubGi_2Dy7GpOG.CqBnWqKnYDy89V2LoQsV0bEG1xuPX7rlTkeB.zaDvbfjPWzw',
                 ),
             )
         );
@@ -67,7 +66,7 @@ class ProductSync {
         curl_setopt_array(
             $curl,
             array(
-                CURLOPT_URL            => 'https://vendor-api-staging.jumia.com/catalog/products',
+                CURLOPT_URL            => 'https://vendor-api.jumia.com/catalog/products?size=100',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING       => '',
                 CURLOPT_MAXREDIRS      => 10,
@@ -76,8 +75,7 @@ class ProductSync {
                 CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST  => 'GET',
                 CURLOPT_HTTPHEADER     => array(
-                    'Authorization: Bearer ' . $this->accessToken,
-                    'Cookie: __cf_bm=5vqn_tlYJwoX74LqdRmj_Ii.zJgUksjaV_O6ewUqE5U-1713852921-1.0.1.1-pcINdhnibkJOgYhazL36Xm9j1xjtmB926xN4ZfQt2G1tXYC5LKLc1IImoGUJAtZnCgch2uulyojmT8kQMHwimw',
+                    'Authorization: Bearer ' . $this->accessToken
                 ),
             )
         );
@@ -87,7 +85,7 @@ class ProductSync {
         curl_close( $curl );
         // convert to array $response
         $response = json_decode( $response, true );
-        return $response['products'];
+        return $response;
     }
 
     /**
@@ -165,12 +163,27 @@ class ProductSync {
 
     public function updateProductStock() {
 
+        // product 
+
+        $productArray = [
+            "products" => [
+                [
+                    "sellerSku" => "BL828",
+                    "id"        => "2d1c6557-0918-428f-91fb-64a39ba05f4c",
+                    "stock"     => 4,
+                ],
+            ],
+        ];
+
+        // convert to json
+        $productJson = json_encode( $productArray );
+
         $curl = curl_init();
 
         curl_setopt_array(
             $curl,
             array(
-                CURLOPT_URL            => 'https://vendor-api-staging.jumia.com/feeds/products/stock',
+                CURLOPT_URL            => 'https://vendor-api.jumia.com/feeds/products/stock',
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_ENCODING       => '',
                 CURLOPT_MAXREDIRS      => 10,
@@ -178,24 +191,11 @@ class ProductSync {
                 CURLOPT_FOLLOWLOCATION => true,
                 CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST  => 'POST',
-                CURLOPT_POSTFIELDS     => '{
-                    "products": [
-                        {
-                        "sellerSku": "jalal4556",
-                        "id": "3a1047e4-a9e2-3c9d-88a3-cfcdb906cf41",
-                        "stock": 500
-                        },
-                        {
-                        "sellerSku": "jalal4556",
-                        "id": "3a1047e4-a9e2-3c9d-88a3-cfcdb906cf41",
-                        "stock": 50
-                        }
-                    ]
-                    }',
+                CURLOPT_POSTFIELDS     => $productJson,
                 CURLOPT_HTTPHEADER     => array(
                     'Authorization: Bearer ' . $this->accessToken,
                     'Content-Type: application/json',
-                    'Cookie: __cf_bm=J.KuHSJ9RPzg0mXYMQJthrq5C1vsLZVV_c09qWXUzHI-1713786910-1.0.1.1-RxUQQR7OTwiBw46hjN2C2UKiN_SXEuuayY7ujq0kv_XUXeROozkcrW_ytbB57A1AIRgtwpRaZ9h1c3J2XveoQQ',
+                    'Cookie: __cf_bm=OtHRyWyEqMVWGVYkrwfm.URc3oCI05Hga2SgJ85NY_g-1714219200-1.0.1.1-y3od0XgXWab8h5MqqcqE7la1_K.qXR1gM0j4rRtAHjiSIt5U8lV_9MKH3fIl36QLc9kwPmfE1yO8IGLxmEZQZQ',
                 ),
             )
         );
@@ -204,6 +204,7 @@ class ProductSync {
 
         curl_close( $curl );
         echo $response;
+
 
     }
 }
