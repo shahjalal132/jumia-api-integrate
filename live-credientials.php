@@ -174,6 +174,60 @@ class ProductSync {
 
 
     }
+
+    public function updateProductPrice() {
+
+        // product array
+        $productArray = [
+            'products' => [
+                [
+                    'sellerSku' => 'BL828',
+                    'id'        => '2d1c6557-0918-428f-91fb-64a39ba05f4c',
+                    'category'  => null,
+                    'price'     => [
+                        'currency'  => 'MAD',
+                        'value'     => 888,
+                        'salePrice' => [
+                            'value'   => null,
+                            'startAt' => null,
+                            'endAt'   => null,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        // convert to json
+        $productJson = json_encode( $productArray );
+
+        $curl = curl_init();
+
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL            => 'https://vendor-api.jumia.com/feeds/products/price',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING       => '',
+                CURLOPT_MAXREDIRS      => 10,
+                CURLOPT_TIMEOUT        => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST  => 'POST',
+                CURLOPT_POSTFIELDS     => $productJson,
+                CURLOPT_HTTPHEADER     => array(
+                    'Authorization: Bearer ' . $this->accessToken,
+                    'Content-Type: application/json',
+                    'Cookie: __cf_bm=z3K9NrE2Gay_MAHsE9uQHdyaMuJflcf4O5LMC.12cGM-1714276081-1.0.1.1-ZUAYpc4xlTXwxVX3IHXIiKZjaJzFKFbNTqDIrtnppaoONYpr6XHJ8WmJ.d7lxRZkf5c_goQyQDGx1FbLLQELow',
+                ),
+            )
+        );
+
+        $response = curl_exec( $curl );
+
+        curl_close( $curl );
+        echo $response;
+
+    }
 }
 
 $productSync = new ProductSync();
