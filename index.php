@@ -19,10 +19,10 @@ class ProductSync {
         $this->client->setAuthConfig( $this->credentialsPath );
         $this->service       = new Google_Service_Sheets( $this->client );
         $this->spreadsheetID = '1igZQ5L-FlY7FTzqMpxPOzbscWLYo15hLW5s9YHwPRD4';
-        $this->sheetRange    = 'products!A:D'; // Retrieve all products
-        // $this->sheetRange    = 'products!C1464:E1464'; // Retrieve one product
-        $this->shopID      = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
-        $this->accessToken = $this->generateAccessToken();
+        // $this->sheetRange    = 'products!A:D';
+        $this->sheetRange = 'products';
+        $this->shopID     = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
+        // $this->accessToken = $this->generateAccessToken();
     }
 
     public function generateAccessToken() {
@@ -58,6 +58,38 @@ class ProductSync {
     public function fetchProductsFromSheets() {
         $response = $this->service->spreadsheets_values->get( $this->spreadsheetID, $this->sheetRange );
         return $response->getValues();
+    }
+
+    public function pushProductInfoToSheet() {
+        $values = [
+            [ "sku1", "id2" ],
+        ];
+
+        $body = new Google_Service_Sheets_ValueRange( [
+            'values' => $values,
+        ] );
+
+        $params = [
+            'valueInputOption' => 'RAW',
+        ];
+
+        $insert = [
+            'insertDataOption' => 'INSERT_ROWS',
+        ];
+
+        $response = $this->service->spreadsheets_values->append(
+            $this->spreadsheetID,
+            $this->sheetRange,
+            $body,
+            $params,
+            $insert
+        );
+
+        if ( $response ) {
+            echo "Insert Data successfully";
+        } else {
+            echo "Something went wrong not inserted";
+        }
     }
 
     public function getProductStatus() {
@@ -241,3 +273,6 @@ $productSync = new ProductSync();
 // get product from sheet
 // echo '<pre>';
 // print_r( $productSync->fetchProductsFromSheets() );
+
+// push product infor to sheet
+$productSync->pushProductInfoToSheet();
