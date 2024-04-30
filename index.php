@@ -61,9 +61,16 @@ class ProductSync {
     }
 
     public function pushProductInfoToSheet() {
-        $values = [
-            [ "sku1", "id2" ],
-        ];
+
+        $filePath     = __DIR__ . '/Data/productData.json';
+        $productData  = file_get_contents( $filePath );
+        $productDatas = json_decode( $productData, true );
+        $productDatas = $productDatas['products'];
+
+        $values = [];
+        foreach ( $productDatas as $productData ) {
+            $values[] = [ $productData['sellerSku'], $productData['id'] ];
+        }
 
         $body = new Google_Service_Sheets_ValueRange( [
             'values' => $values,
@@ -275,4 +282,4 @@ $productSync = new ProductSync();
 // print_r( $productSync->fetchProductsFromSheets() );
 
 // push product infor to sheet
-$productSync->pushProductInfoToSheet();
+// $productSync->pushProductInfoToSheet();

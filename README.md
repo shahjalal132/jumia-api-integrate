@@ -18,6 +18,10 @@ An E-commerce API. All Products stored into a google sheet. Fetching from Google
 - If product exists, update product
 - If product does not exist, create product
 
+### Changes Client Requirement
+
+Once created this functionality client change some requirement. He Created Product on his store. I need to update product stock and price every 6 hours. Then i need to update product stock and price every 6 hours.
+
 ## Challenges
 
 - API was not ready and has some issues. I Had to research and contact with Jumia support team and fix it.

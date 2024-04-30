@@ -1,0 +1,114 @@
+{
+  "products": [
+    {
+      "id": "754d1cc5-1a29-4f28-a672-c36e70ffccc7",
+      "globalStock": 1,
+      "sellerSku": "BL727",
+      "lastStockUpdatedAt": "2024-03-14T11:54:06.535Z"
+    },
+    {
+      "id": "67c1eaa7-c16d-443f-96b7-1f38adf3b649",
+      "globalStock": 0,
+      "sellerSku": "BL517",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.595Z"
+    },
+    {
+      "id": "ddd9976e-2643-4340-83ba-88db599f8d05",
+      "globalStock": 2,
+      "sellerSku": "BL372",
+      "lastStockUpdatedAt": "2024-04-17T09:59:37.590Z"
+    },
+    {
+      "id": "8826b917-b03c-4743-a8cd-7506d63d1d55",
+      "globalStock": 0,
+      "sellerSku": "BL498",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.673Z"
+    },
+    {
+      "id": "9153982a-50cd-4c2f-8dd5-91461c8c9e4b",
+      "globalStock": 0,
+      "sellerSku": "BL1274",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.330Z"
+    },
+    {
+      "id": "be3dc724-0eed-47e6-a9af-e80d646cd2c7",
+      "globalStock": 2,
+      "sellerSku": "BL731",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.426Z"
+    },
+    {
+      "id": "adcf5e5e-98c6-4e23-ad2c-f6e7f7567207",
+      "globalStock": 5,
+      "sellerSku": "BL728",
+      "lastStockUpdatedAt": "2024-04-08T09:56:17.558Z"
+    },
+    {
+      "id": "4375aa7c-d32d-43ca-905b-a8b2b66a7fe7",
+      "globalStock": 0,
+      "sellerSku": "BL1277",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.559Z"
+    },
+    {
+      "id": "da63e09e-c494-4336-9abf-0e3e225f14cf",
+      "globalStock": 0,
+      "sellerSku": "BL499",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.572Z"
+    },
+    {
+      "id": "4d37fdb1-35d8-45b6-b44b-5559e778ad2f",
+      "globalStock": 0,
+      "sellerSku": "BL1270",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.522Z"
+    },
+    {
+      "id": "ddffde5f-b6a6-4efe-b031-57754a583f32",
+      "globalStock": 0,
+      "sellerSku": "BL519",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.497Z"
+    },
+    {
+      "id": "fb1c1354-fca4-4aef-b8b1-1438d1cf42dc",
+      "globalStock": 0,
+      "sellerSku": "BL502",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.775Z"
+    },
+    {
+      "id": "cb775600-cf5d-48b1-998c-80bf50b10583",
+      "globalStock": 0,
+      "sellerSku": "BL1271",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.352Z"
+    },
+    {
+      "id": "85aacd21-e12d-40b1-bb83-9c23534d23d3",
+      "globalStock": 0,
+      "sellerSku": "BL503",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.937Z"
+    },
+    {
+      "id": "49d174df-c53c-4f45-80af-a61101904c68",
+      "globalStock": 0,
+      "sellerSku": "BL1272",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.316Z"
+    },
+    {
+      "id": "d102ffe0-30b5-4263-b206-1c6eeba2bf41",
+      "globalStock": 0,
+      "sellerSku": "BL206",
+      "lastStockUpdatedAt": "2024-03-14T12:00:33.112Z"
+    },
+    {
+      "id": "d2482c89-f81f-406e-b815-2d0fa2657c52",
+      "globalStock": 0,
+      "sellerSku": "BL681",
+      "lastStockUpdatedAt": "2024-03-14T12:00:32.738Z"
+    },
+    {
+      "id": "2c700800-5c6a-45a5-b6e2-88c927c17a96",
+      "globalStock": 1,
+      "sellerSku": "BL729",
+      "lastStockUpdatedAt": "2024-04-03T10:36:40.573Z"
+    }
+  ],
+  "nextToken": null,
+  "isLastPage": true
+}
