@@ -2,7 +2,7 @@
 
 ## Overview
 
-An E-commerce API. All Products stored into a google sheet. Fetching from Google sheet and Create or Update product the vendor store.
+An E-commerce API. All Products stored into a google sheet. Fetching from Google sheet and Create or Update product the vendor store. When all products are created then update product stock and price every 6 hours.
 
 ## Integration Process
 
@@ -17,6 +17,7 @@ An E-commerce API. All Products stored into a google sheet. Fetching from Google
 - Check condition if product exists or not
 - If product exists, update product
 - If product does not exist, create product
+- Every 6 hours update product stock and price
 
 ### Changes Client Requirement
 
@@ -28,6 +29,7 @@ Once created this functionality client change some requirement. He Created Produ
 - Google sheet API. I didn't know that. I had to learn it.
 - Business logic was not clear for me. I had to research and implement it.
 - First the code was written procedural way. Then I changed it to object oriented way.
+- Client has change his requirements. I need to update product stock and price every 6 hours.
 
 ## How to use
 
