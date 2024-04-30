@@ -180,7 +180,7 @@ class ProductSync {
 
     public function updateProductPrice( $sku, $id, $price ) {
 
-        if ( '' == $sku || '' == $id || '' == $price )
+        if ( '' == $sku || '' == $id || 0 == $price )
             return;
 
         // product array
@@ -236,8 +236,11 @@ class ProductSync {
     }
 
     public function updateStockPrice() {
+
+        // Fetch products from sheet
         $productInfoFromSheet = $this->fetchProductsFromSheets();
 
+        // Update product stock and price
         foreach ( $productInfoFromSheet as $product ) {
             $sku   = $product[0] ?? '';
             $id    = $product[1] ?? '';
