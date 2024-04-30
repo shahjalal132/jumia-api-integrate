@@ -131,8 +131,10 @@ class ProductSync {
 
     public function updateProductStock( $sku, $id, $stock ) {
 
-        if ( '' == $sku )
+        if ( '' == $sku || '' == $id || '' == $stock )
             return;
+
+
 
         // product array
         $productArray = [
