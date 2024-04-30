@@ -180,7 +180,7 @@ class ProductSync {
 
     public function updateProductPrice( $sku, $id, $price ) {
 
-        if ( '' == $sku )
+        if ( '' == $sku || '' == $id || '' == $price )
             return;
 
         // product array
