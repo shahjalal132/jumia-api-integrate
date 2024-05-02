@@ -20,9 +20,10 @@ class ProductSync {
         $this->service       = new Google_Service_Sheets( $this->client );
         $this->spreadsheetID = '1igZQ5L-FlY7FTzqMpxPOzbscWLYo15hLW5s9YHwPRD4';
         $this->sheetRange    = 'products!A:D';
+        // $this->sheetRange    = 'products!A3:D3';
         // $this->sheetRange = 'products';
         $this->shopID     = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
-        // $this->accessToken = $this->generateAccessToken();
+        $this->accessToken = $this->generateAccessToken();
     }
 
     public function generateAccessToken() {
@@ -101,7 +102,7 @@ class ProductSync {
 
     public function getProductStatus() {
 
-        $feedId = 'c7cf573f-d8bf-4e83-bf11-56ffc29a5c69';
+        $feedId = 'aa07be81-424f-46d4-8157-10becc407a3b';
 
         $curl = curl_init();
 
@@ -242,6 +243,7 @@ class ProductSync {
 
         // Update product stock and price
         foreach ( $productInfoFromSheet as $product ) {
+            
             $sku   = $product[0] ?? '';
             $id    = $product[1] ?? '';
             $stock = $product[2] ?? 0;
