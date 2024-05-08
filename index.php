@@ -95,6 +95,11 @@ class ProductSync {
         }
     }
 
+    public function fetchProductsFromSheets() {
+        $response = $this->service->spreadsheets_values->get( $this->spreadsheetID, $this->sheetRange );
+        return $response->getValues();
+    }
+
     public function insertProductToDatabase() {
         // require config file
         require 'config.php';
@@ -128,11 +133,6 @@ class ProductSync {
         mysqli_close( $conn );
 
         echo "Products inserted successfully to Database";
-    }
-
-    public function fetchProductsFromSheets() {
-        $response = $this->service->spreadsheets_values->get( $this->spreadsheetID, $this->sheetRange );
-        return $response->getValues();
     }
 
     public function updateProductStock( $sku, $id, $stock ) {
