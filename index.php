@@ -20,9 +20,9 @@ class ProductSync {
         $this->service       = new Google_Service_Sheets( $this->client );
         $this->spreadsheetID = '1igZQ5L-FlY7FTzqMpxPOzbscWLYo15hLW5s9YHwPRD4';
         $this->sheetRange    = 'products!A:D';
-        // $this->sheetRange    = 'products!A3:D3';
+        // $this->sheetRange = 'products!A1114:D1114';
         // $this->sheetRange = 'products';
-        $this->shopID     = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
+        $this->shopID      = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
         $this->accessToken = $this->generateAccessToken();
     }
 
@@ -100,9 +100,44 @@ class ProductSync {
         }
     }
 
+    public function insertProductToDatabase() {
+        // require config file
+        require 'config.php';
+
+        // fetch products for Google Sheet
+        $sheetData = $this->fetchProductsFromSheets();
+
+        // insert products to database
+        foreach ( $sheetData as $sheetDatum ) {
+            // retrieve product data
+            $sku    = $sheetDatum[0];
+            $sid    = $sheetDatum[1];
+            $stock  = $sheetDatum[2];
+            $price  = $sheetDatum[3];
+            $status = 'pending'; // Set status to pending as per your table definition
+
+            // Prepare the SQL statement
+            $sql = "INSERT INTO products (sku, sid, stock, price, status) VALUES ('$sku', '$sid', $stock, $price, '$status')";
+
+            // Execute the SQL statement
+            $result = mysqli_query( $conn, $sql );
+
+            // Check if the insertion was successful
+            if ( !$result ) {
+                // Handle the error if insertion failed
+                echo "Error: " . mysqli_error( $conn );
+            }
+        }
+
+        // Close the database connection
+        mysqli_close( $conn );
+
+        echo "Products inserted successfully to Database";
+    }
+
     public function getProductStatus() {
 
-        $feedId = 'aa07be81-424f-46d4-8157-10becc407a3b';
+        $feedId = 'dbe99ec8-5c22-4482-ab07-49213b038f53';
 
         $curl = curl_init();
 
@@ -131,11 +166,6 @@ class ProductSync {
     }
 
     public function updateProductStock( $sku, $id, $stock ) {
-
-        if ( '' == $sku || '' == $id || '' == $stock )
-            return;
-
-
 
         // product array
         $productArray = [
@@ -180,9 +210,6 @@ class ProductSync {
     }
 
     public function updateProductPrice( $sku, $id, $price ) {
-
-        if ( '' == $sku || '' == $id || 0 == $price )
-            return;
 
         // product array
         $productArray = [
@@ -243,7 +270,7 @@ class ProductSync {
 
         // Update product stock and price
         foreach ( $productInfoFromSheet as $product ) {
-            
+
             $sku   = $product[0] ?? '';
             $id    = $product[1] ?? '';
             $stock = $product[2] ?? 0;
@@ -252,7 +279,7 @@ class ProductSync {
             // Update product stock
             $stockUpdated = $this->updateProductStock( $sku, $id, $stock );
             if ( !$stockUpdated ) {
-                echo "Failed to update stock for product with SKU: $sku <br>";
+                $stockUpdated .= "Failed to update stock for product with SKU: $sku <br>";
                 continue; // Skip to the next product if stock update fails
             }
 
@@ -261,7 +288,7 @@ class ProductSync {
             // Update product price
             $priceUpdated = $this->updateProductPrice( $sku, $id, $price );
             if ( !$priceUpdated ) {
-                echo "Failed to update price for product with SKU: $sku <br>";
+                $priceUpdated .= "Failed to update price for product with SKU: $sku <br>";
                 continue; // Skip to the next product if price update fails
             }
 
@@ -290,3 +317,6 @@ $productSync = new ProductSync();
 
 // push product infor to sheet
 // $productSync->pushProductInfoToSheet();
+
+// insert products to database
+$productSync->insertProductToDatabase();
