@@ -135,6 +135,39 @@ class ProductSync {
         echo "Products inserted successfully to Database";
     }
 
+    public function fetchProductFromDatabase() {
+        // require config file
+        require 'config.php';
+
+        // fetch products from database
+        $sql = "SELECT * FROM products";
+
+        // Execute the SQL statement
+        $result = mysqli_query( $conn, $sql );
+
+        // Check if the query was successful
+        if ( !$result ) {
+            // Handle the error if query failed
+            echo "Error: " . mysqli_error( $conn );
+        } else {
+            // Fetch the rows from the result set
+            $products = array();
+            while ( $row = mysqli_fetch_assoc( $result ) ) {
+                // Add each row to the products array
+                $products[] = $row;
+            }
+
+            // Close the result set
+            mysqli_free_result( $result );
+
+            // Close the database connection
+            mysqli_close( $conn );
+
+            // Return the fetched products
+            return $products;
+        }
+    }
+
     public function updateProductStock( $sku, $id, $stock ) {
 
         // product array
@@ -319,4 +352,8 @@ $productSync = new ProductSync();
 // $productSync->pushProductInfoToSheet();
 
 // insert products to database
-$productSync->insertProductToDatabase();
+// $productSync->insertProductToDatabase();
+
+// fetch products from database
+// echo '<pre>';
+// print_r( $productSync->fetchProductFromDatabase() );
