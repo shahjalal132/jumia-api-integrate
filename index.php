@@ -140,7 +140,8 @@ class ProductSync {
         require 'config.php';
 
         // fetch products from database
-        $sql = "SELECT * FROM products";
+        // $sql = "SELECT * FROM products";
+        $sql = "SELECT * FROM products LIMIT 10";
 
         // Execute the SQL statement
         $result = mysqli_query( $conn, $sql );
@@ -268,37 +269,49 @@ class ProductSync {
 
     public function updateStockPrice() {
 
-        // Fetch products from sheet
-        $productInfoFromSheet = $this->fetchProductsFromSheets();
+        // Fetch products from database
+        $productInfoFromDB = $this->fetchProductFromDatabase();
 
         // Update product stock and price
-        foreach ( $productInfoFromSheet as $product ) {
-
-            $sku   = $product[0] ?? '';
-            $id    = $product[1] ?? '';
-            $stock = $product[2] ?? 0;
-            $price = $product[3] ?? 0;
+        foreach ( $productInfoFromDB as $product ) {
+            // Retrieve product data
+            $id    = $product['id'] ?? 0;
+            $sku   = $product['sku'] ?? '';
+            $sid   = $product['sid'] ?? '';
+            $stock = $product['stock'] ?? 0;
+            $price = $product['price'] ?? 0;
 
             // Update product stock
-            $stockUpdated = $this->updateProductStock( $sku, $id, $stock );
-            if ( !$stockUpdated ) {
-                $stockUpdated .= "Failed to update stock for product with SKU: $sku <br>";
-                continue; // Skip to the next product if stock update fails
-            }
-
-            echo $stockUpdated;
+            echo $this->updateProductStock( $sku, $sid, $stock );
 
             // Update product price
-            $priceUpdated = $this->updateProductPrice( $sku, $id, $price );
-            if ( !$priceUpdated ) {
-                $priceUpdated .= "Failed to update price for product with SKU: $sku <br>";
-                continue; // Skip to the next product if price update fails
-            }
+            echo $this->updateProductPrice( $sku, $sid, $price );
 
-            echo $priceUpdated;
+            // Update status to completed
+            $this->updateProductStatus( $id, 'completed' );
 
             echo "Product Updated <br>";
         }
+    }
+
+    private function updateProductStatus( $id, $status ) {
+        // require config file
+        require 'config.php';
+
+        // Update product status
+        $sql = "UPDATE products SET status = '$status' WHERE id = $id";
+
+        // Execute the SQL statement
+        $result = mysqli_query( $conn, $sql );
+
+        // Check if the query was successful
+        if ( !$result ) {
+            // Handle the error if query failed
+            echo "Error updating status: " . mysqli_error( $conn );
+        }
+
+        // Close the database connection
+        mysqli_close( $conn );
     }
 
     public function getProductStatus() {
