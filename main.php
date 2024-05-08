@@ -386,7 +386,7 @@ class ProductSync {
     }
 }
 
-$productSync = new ProductSync();
+// $productSync = new ProductSync();
 // $productSync->updateStockPrice();
 
 // get product status
