@@ -56,11 +56,6 @@ class ProductSync {
         return $response['access_token'];
     }
 
-    public function fetchProductsFromSheets() {
-        $response = $this->service->spreadsheets_values->get( $this->spreadsheetID, $this->sheetRange );
-        return $response->getValues();
-    }
-
     public function pushProductInfoToSheet() {
 
         $filePath     = __DIR__ . '/Data/productData.json';
@@ -135,34 +130,9 @@ class ProductSync {
         echo "Products inserted successfully to Database";
     }
 
-    public function getProductStatus() {
-
-        $feedId = 'dbe99ec8-5c22-4482-ab07-49213b038f53';
-
-        $curl = curl_init();
-
-        curl_setopt_array(
-            $curl,
-            array(
-                CURLOPT_URL            => 'https://vendor-api.jumia.com/feeds/' . $feedId,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING       => '',
-                CURLOPT_MAXREDIRS      => 10,
-                CURLOPT_TIMEOUT        => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST  => 'GET',
-                CURLOPT_HTTPHEADER     => array(
-                    'Authorization: Bearer ' . $this->accessToken,
-                ),
-            )
-        );
-
-        $response = curl_exec( $curl );
-
-        curl_close( $curl );
-        echo $response;
-
+    public function fetchProductsFromSheets() {
+        $response = $this->service->spreadsheets_values->get( $this->spreadsheetID, $this->sheetRange );
+        return $response->getValues();
     }
 
     public function updateProductStock( $sku, $id, $stock ) {
@@ -296,6 +266,36 @@ class ProductSync {
 
             echo "Product Updated <br>";
         }
+    }
+
+    public function getProductStatus() {
+
+        $feedId = 'dbe99ec8-5c22-4482-ab07-49213b038f53';
+
+        $curl = curl_init();
+
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL            => 'https://vendor-api.jumia.com/feeds/' . $feedId,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING       => '',
+                CURLOPT_MAXREDIRS      => 10,
+                CURLOPT_TIMEOUT        => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST  => 'GET',
+                CURLOPT_HTTPHEADER     => array(
+                    'Authorization: Bearer ' . $this->accessToken,
+                ),
+            )
+        );
+
+        $response = curl_exec( $curl );
+
+        curl_close( $curl );
+        echo $response;
+
     }
 }
 
