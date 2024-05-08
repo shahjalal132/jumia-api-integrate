@@ -22,7 +22,8 @@ class ProductSync {
         $this->sheetRange    = 'products!A:D';
         // $this->sheetRange = 'products!A1114:D1114';
         // $this->sheetRange = 'products';
-        $this->shopID      = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
+        $this->shopID = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
+        // $this->insertProductToDatabase();
         $this->accessToken = $this->generateAccessToken();
     }
 
@@ -103,6 +104,16 @@ class ProductSync {
     public function insertProductToDatabase() {
         // require config file
         require 'config.php';
+
+        // Truncate the products table to remove previous products
+        $truncate_sql    = "TRUNCATE TABLE products";
+        $truncate_result = mysqli_query( $conn, $truncate_sql );
+
+        if ( !$truncate_result ) {
+            // Handle the error if truncation failed
+            echo "Error truncating products table: " . mysqli_error( $conn );
+            return; // Stop further execution if truncation fails
+        }
 
         // fetch products for Google Sheet
         $sheetData = $this->fetchProductsFromSheets();
