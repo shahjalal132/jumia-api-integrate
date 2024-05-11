@@ -22,7 +22,7 @@ class ProductSync {
         $this->sheetRange    = 'products!A:D';
         // $this->sheetRange = 'products!A1114:D1114';
         // $this->sheetRange = 'products';
-        $this->shopID = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
+        $this->shopID      = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
         $this->accessToken = $this->generateAccessToken();
     }
 
@@ -258,23 +258,38 @@ class ProductSync {
 
         // product array
         $productArray = [
-            'products' => [
+            "products" => [
                 [
-                    'sellerSku' => $sku,
-                    'id'        => $id,
-                    'category'  => null,
-                    'price'     => [
-                        'currency'  => 'MAD',
-                        'value'     => intval( $price ),
-                        'salePrice' => [
-                            'value'   => null,
-                            'startAt' => null,
-                            'endAt'   => null,
+                    "sellerSku"       => "$sku",
+                    "id"              => "$id",
+                    "category"        => "",
+                    "price"           => [
+                        "currency"  => "MAD",
+                        "value"     => intval( $price ),
+                        "salePrice" => [
+                            "value"   => null,
+                            "startAt" => "",
+                            "endAt"   => "",
+                        ],
+                    ],
+                    "businessClients" => [
+                        [
+                            "businessClientCode" => "jumia-ma",
+                            "price"              => [
+                                "currency"  => "MAD",
+                                "value"     => intval( $price ),
+                                "salePrice" => [
+                                    "value"   => null,
+                                    "startAt" => "",
+                                    "endAt"   => "",
+                                ],
+                            ],
                         ],
                     ],
                 ],
             ],
         ];
+
 
         // convert to json
         $productJson = json_encode( $productArray );
