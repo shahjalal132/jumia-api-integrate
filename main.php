@@ -182,7 +182,7 @@ class ProductSync {
         require 'config.php';
 
         // fetch products from database
-        $sql = "SELECT * FROM products WHERE status = 'pending' LIMIT 10";
+        $sql = "SELECT * FROM products WHERE status = 'pending' LIMIT 50";
 
         // Execute the SQL statement
         $result = mysqli_query( $conn, $sql );
