@@ -35,7 +35,7 @@ body {
 
 div#login-form {
   width: 500px;
-  height: 380px;
+  min-height: 380px;
   position: fixed;
   top: 50%;
   left: 50%;

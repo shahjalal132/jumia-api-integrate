@@ -1,3 +1,12 @@
+<?php
+
+session_start();
+if ( !isset( $_SESSION['login'] ) ) {
+    header( 'location: ../index.php' );
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,13 +66,14 @@
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <div class="jumia-radio">
-                                                        <input class="form-check-input" type="radio" value="stock-enable"
-                                                            name="stock-update" id="stock-enable">
+                                                        <input class="form-check-input" type="radio"
+                                                            value="stock-enable" name="stock-update" id="stock-enable">
                                                         <label class="form-check-label" for="stock-enable">
                                                             Enable
                                                         </label>
                                                         <input class="form-check-input ms-4" type="radio"
-                                                            value="stock-disable" name="stock-update" id="stock-disable">
+                                                            value="stock-disable" name="stock-update"
+                                                            id="stock-disable">
                                                         <label class="form-check-label" for="stock-disable">
                                                             Disable
                                                         </label>
@@ -83,14 +93,15 @@
                                                 <div class="col-sm-6">
                                                     <div class="jumia-radio">
 
-                                                        <input class="form-check-input" type="radio" value="price-enable"
-                                                            name="price-update" id="price-enable">
+                                                        <input class="form-check-input" type="radio"
+                                                            value="price-enable" name="price-update" id="price-enable">
                                                         <label class="form-check-label" for="price-enable">
                                                             Enable
                                                         </label>
 
                                                         <input class="form-check-input ms-4" type="radio"
-                                                            value="price-disable" name="price-update" id="price-disable">
+                                                            value="price-disable" name="price-update"
+                                                            id="price-disable">
                                                         <label class="form-check-label" for="price-disable">
                                                             Disable
                                                         </label>
