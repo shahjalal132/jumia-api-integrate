@@ -154,37 +154,28 @@ class ProductSync {
         $conn = null;
     }
 
-
     public function fetchProductFromDatabase() {
         // require config file
-        require 'config.php';
+        require_once 'config.php';
 
-        // fetch products from database
-        $sql = "SELECT * FROM products WHERE status = 'pending' LIMIT 50";
+        try {
+            // Fetch products from database
+            $sql  = "SELECT * FROM products WHERE status = 'pending' LIMIT 40";
+            $stmt = $conn->prepare( $sql );
+            $stmt->execute();
 
-        // Execute the SQL statement
-        $result = mysqli_query( $conn, $sql );
-
-        // Check if the query was successful
-        if ( !$result ) {
-            // Handle the error if query failed
-            echo "Error: " . mysqli_error( $conn );
-        } else {
             // Fetch the rows from the result set
-            $products = array();
-            while ( $row = mysqli_fetch_assoc( $result ) ) {
-                // Add each row to the products array
-                $products[] = $row;
-            }
-
-            // Close the result set
-            mysqli_free_result( $result );
+            $products = $stmt->fetchAll( PDO::FETCH_ASSOC );
 
             // Close the database connection
-            mysqli_close( $conn );
+            $conn = null;
 
             // Return the fetched products
             return $products;
+        } catch (PDOException $e) {
+            // Handle the error if query failed
+            echo "Error: " . $e->getMessage();
+            return false;
         }
     }
 
