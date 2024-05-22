@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../config.php';
+require_once '../config.php'; // Ensure this is correctly pointing to your config file
 
 if ( !isset( $_SESSION['login'] ) ) {
     header( 'location: ../index.php' );
@@ -9,6 +9,39 @@ if ( !isset( $_SESSION['login'] ) ) {
 
 $error   = '';
 $success = '';
+
+// Fetch existing API credentials
+$clientId     = '';
+$refreshToken = '';
+try {
+    $sql            = "SELECT client_id, refresh_token FROM api_credentials ORDER BY id DESC LIMIT 1";
+    $stmt           = $conn->query( $sql );
+    $apiCredentials = $stmt->fetch( PDO::FETCH_ASSOC );
+    if ( $apiCredentials ) {
+        $clientId     = $apiCredentials['client_id'];
+        $refreshToken = $apiCredentials['refresh_token'];
+    }
+} catch (PDOException $e) {
+    $error = 'Error fetching API credentials: ' . $e->getMessage();
+}
+
+// Fetch existing control settings
+$stockUpdate = '';
+$priceUpdate = '';
+try {
+    $sql      = "SELECT control_key, control_value FROM controls WHERE control_key IN ('stock_update', 'price_update')";
+    $stmt     = $conn->query( $sql );
+    $controls = $stmt->fetchAll( PDO::FETCH_ASSOC );
+    foreach ( $controls as $control ) {
+        if ( $control['control_key'] === 'stock_update' ) {
+            $stockUpdate = $control['control_value'];
+        } elseif ( $control['control_key'] === 'price_update' ) {
+            $priceUpdate = $control['control_value'];
+        }
+    }
+} catch (PDOException $e) {
+    $error = 'Error fetching control settings: ' . $e->getMessage();
+}
 
 // Handle form submission for API credentials
 if ( isset( $_POST['save-api-credentials'] ) ) {
@@ -105,12 +138,13 @@ if ( isset( $_POST['save-controls'] ) ) {
                                         <label for="api-client-id" class="form-label">Client ID</label>
                                         <input type="text" name="client_id" class="form-control bg-transparent"
                                             placeholder="Enter Client ID" id="api-client-id" aria-describedby="clientID"
-                                            required>
+                                            value="<?php echo htmlspecialchars( $clientId ); ?>" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="refresh-token" class="form-label">Refresh Token</label>
                                         <input type="text" name="refresh_token" class="form-control bg-transparent"
-                                            placeholder="Enter Refresh Token" id="refresh-token" required>
+                                            placeholder="Enter Refresh Token" id="refresh-token"
+                                            value="<?php echo htmlspecialchars( $refreshToken ); ?>" required>
                                     </div>
                                     <button type="submit" name="save-api-credentials"
                                         class="btn btn-primary">Save</button>
@@ -140,12 +174,12 @@ if ( isset( $_POST['save-controls'] ) ) {
                                                     <div class="jumia-radio">
                                                         <input class="form-check-input" type="radio"
                                                             value="stock-enable" name="stock-update" id="stock-enable"
-                                                            required>
+                                                            <?php echo ( $stockUpdate === 'stock-enable' ) ? 'checked' : ''; ?> required>
                                                         <label class="form-check-label"
                                                             for="stock-enable">Enable</label>
                                                         <input class="form-check-input ms-4" type="radio"
-                                                            value="stock-disable" name="stock-update"
-                                                            id="stock-disable">
+                                                            value="stock-disable" name="stock-update" id="stock-disable"
+                                                            <?php echo ( $stockUpdate === 'stock-disable' ) ? 'checked' : ''; ?>>
                                                         <label class="form-check-label"
                                                             for="stock-disable">Disable</label>
                                                     </div>
@@ -164,12 +198,12 @@ if ( isset( $_POST['save-controls'] ) ) {
                                                     <div class="jumia-radio">
                                                         <input class="form-check-input" type="radio"
                                                             value="price-enable" name="price-update" id="price-enable"
-                                                            required>
+                                                            <?php echo ( $priceUpdate === 'price-enable' ) ? 'checked' : ''; ?> required>
                                                         <label class="form-check-label"
                                                             for="price-enable">Enable</label>
                                                         <input class="form-check-input ms-4" type="radio"
-                                                            value="price-disable" name="price-update"
-                                                            id="price-disable">
+                                                            value="price-disable" name="price-update" id="price-disable"
+                                                            <?php echo ( $priceUpdate === 'price-disable' ) ? 'checked' : ''; ?> required>
                                                         <label class="form-check-label"
                                                             for="price-disable">Disable</label>
                                                     </div>
