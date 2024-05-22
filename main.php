@@ -102,48 +102,58 @@ class ProductSync {
 
     public function insertProductToDatabase() {
         // require config file
-        require 'config.php';
+        require_once 'config.php';
 
-        // Truncate the products table to remove previous products
-        $truncate_sql    = "TRUNCATE TABLE products";
-        $truncate_result = mysqli_query( $conn, $truncate_sql );
+        try {
+            // Truncate the products table to remove previous products
+            $truncate_sql  = "TRUNCATE TABLE products";
+            $truncate_stmt = $conn->prepare( $truncate_sql );
+            $truncate_stmt->execute();
 
-        if ( !$truncate_result ) {
-            // Handle the error if truncation failed
-            echo "Error truncating products table: " . mysqli_error( $conn );
-            return; // Stop further execution if truncation fails
-        }
+            // Fetch products from Google Sheets
+            $sheetData = $this->fetchProductsFromSheets();
 
-        // fetch products for Google Sheet
-        $sheetData = $this->fetchProductsFromSheets();
+            // Prepare the SQL statement for inserting products
+            $sql  = "INSERT INTO products (sku, sid, stock, price, status) VALUES (:sku, :sid, :stock, :price, :status)";
+            $stmt = $conn->prepare( $sql );
 
-        // insert products to database
-        foreach ( $sheetData as $sheetDatum ) {
-            // retrieve product data
-            $sku    = $sheetDatum[0];
-            $sid    = $sheetDatum[1];
-            $stock  = $sheetDatum[2];
-            $price  = $sheetDatum[3];
-            $status = 'pending'; // Set status to pending as per your table definition
+            // Begin transaction
+            $conn->beginTransaction();
 
-            // Prepare the SQL statement
-            $sql = "INSERT INTO products (sku, sid, stock, price, status) VALUES ('$sku', '$sid', $stock, $price, '$status')";
+            // Insert products into database
+            foreach ( $sheetData as $sheetDatum ) {
+                // Retrieve product data
+                $sku    = $sheetDatum[0];
+                $sid    = $sheetDatum[1];
+                $stock  = $sheetDatum[2];
+                $price  = $sheetDatum[3];
+                $status = 'pending';
 
-            // Execute the SQL statement
-            $result = mysqli_query( $conn, $sql );
+                // Bind parameters
+                $stmt->bindParam( ':sku', $sku );
+                $stmt->bindParam( ':sid', $sid );
+                $stmt->bindParam( ':stock', $stock );
+                $stmt->bindParam( ':price', $price );
+                $stmt->bindParam( ':status', $status );
 
-            // Check if the insertion was successful
-            if ( !$result ) {
-                // Handle the error if insertion failed
-                echo "Error: " . mysqli_error( $conn );
+                // Execute the SQL statement
+                $stmt->execute();
             }
+
+            // Commit the transaction
+            $conn->commit();
+
+            echo "Products inserted successfully to Database";
+        } catch (PDOException $e) {
+            // Rollback the transaction if something failed
+            $conn->rollBack();
+            echo "Error: " . $e->getMessage();
         }
 
         // Close the database connection
-        mysqli_close( $conn );
-
-        echo "Products inserted successfully to Database";
+        $conn = null;
     }
+
 
     public function fetchProductFromDatabase() {
         // require config file
