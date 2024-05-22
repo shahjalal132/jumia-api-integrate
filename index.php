@@ -2,14 +2,7 @@
 session_start();
 require_once 'config.php';
 
-function user_logged_in() {
-    $sessionLoginKey = isset( $_SESSION['login'] ) ? $_SESSION['login'] : '';
-    if ( $sessionLoginKey == 'successful' ) {
-        return true;
-    }
-}
-
-if ( user_logged_in() ) {
+if ( isset( $_SESSION['login'] ) ) {
     header( 'Location: admin/dashboard.php' );
 }
 
@@ -36,7 +29,7 @@ if ( isset( $_POST['login'] ) ) {
     } else {
         $error = 'Invalid username or password';
     }
-    
+
 }
 ?>
 
