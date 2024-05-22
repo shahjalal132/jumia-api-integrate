@@ -321,23 +321,24 @@ class ProductSync {
 
     private function updateProductStatus( $id, $status ) {
         // require config file
-        require 'config.php';
+        require_once 'config.php';
 
-        // Update product status
-        $sql = "UPDATE products SET status = '$status' WHERE id = $id";
+        try {
+            // Update product status
+            $sql  = "UPDATE products SET status = :status WHERE id = :id";
+            $stmt = $conn->prepare( $sql );
+            $stmt->bindParam( ':status', $status );
+            $stmt->bindParam( ':id', $id );
+            $stmt->execute();
 
-        // Execute the SQL statement
-        $result = mysqli_query( $conn, $sql );
-
-        // Check if the query was successful
-        if ( !$result ) {
+            // Close the database connection
+            $conn = null;
+        } catch (PDOException $e) {
             // Handle the error if query failed
-            echo "Error updating status: " . mysqli_error( $conn );
+            echo "Error updating status: " . $e->getMessage();
         }
-
-        // Close the database connection
-        mysqli_close( $conn );
     }
+
 
     public function getProductStatus() {
 
