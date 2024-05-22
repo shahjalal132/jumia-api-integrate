@@ -22,39 +22,76 @@ class ProductSync {
         $this->sheetRange    = 'products!A:D';
         // $this->sheetRange = 'products!A1114:D1114';
         // $this->sheetRange = 'products';
-        $this->shopID      = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
-        $this->accessToken = $this->generateAccessToken();
+        $this->shopID = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
     }
 
     public function generateAccessToken() {
-        $curl = curl_init();
+        // require config file
+        require_once 'config.php';
 
-        curl_setopt_array(
-            $curl,
-            array(
-                CURLOPT_URL            => 'https://vendor-api.jumia.com/token',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING       => '',
-                CURLOPT_MAXREDIRS      => 10,
-                CURLOPT_TIMEOUT        => 0,
-                CURLOPT_FOLLOWLOCATION => true,
-                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST  => 'POST',
-                CURLOPT_POSTFIELDS     => 'client_id=784e325d-e0a9-4dab-a751-01113d9a4a86&grant_type=refresh_token&refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIyYTVmOTE3Zi1jNDRlLTQ3MWEtYTRiZC03NDE1NWU1ODYwZGIifQ.eyJqdGkiOiI2ODU2NzI1YS0wMjNmLTQ2NDAtOWMzMC01M2NjZDUwMDc2NWMiLCJleHAiOjE3NDU3NTE3NDMsIm5iZiI6MCwiaWF0IjoxNzE0MjE1NzQzLCJpc3MiOiJodHRwczovL3ZlbmRvci1hcGkuanVtaWEuY29tL2F1dGgvcmVhbG1zL2FjbCIsImF1ZCI6Imh0dHBzOi8vdmVuZG9yLWFwaS5qdW1pYS5jb20vYXV0aC9yZWFsbXMvYWNsIiwic3ViIjoiZTcyZTgxYmYtNTA4OS00N2IyLTlmMGQtZjA1ODg1Y2JmY2VmIiwidHlwIjoiUmVmcmVzaCIsImF6cCI6Ijc4NGUzMjVkLWUwYTktNGRhYi1hNzUxLTAxMTEzZDlhNGE4NiIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6Ijk0ZjkzNzVhLWM2NjMtNDM1Zi04MmI0LWRiMjkxNzdmN2Y5MSIsInNjb3BlIjoicHJvZmlsZSBlbWFpbCJ9.DR5gM7U97-Rapp5pKGLkTpZkC7IgAc5ILciLNG-sa_k',
-                CURLOPT_HTTPHEADER     => array(
-                    'Content-Type: application/x-www-form-urlencoded',
-                ),
-            )
-        );
+        try {
+            // Fetch client ID and refresh token from database
+            $sql         = "SELECT client_id, refresh_token FROM api_credentials ORDER BY id DESC LIMIT 1";
+            $stmt        = $conn->query( $sql );
+            $credentials = $stmt->fetch( PDO::FETCH_ASSOC );
 
-        $response = curl_exec( $curl );
+            if ( !$credentials ) {
+                // Handle the case if no credentials are found
+                echo "Error: No credentials found in the database";
+                return;
+            }
 
-        curl_close( $curl );
+            // Assign client ID and refresh token from database to variables
+            $clientID     = $credentials['client_id'];
+            $refreshToken = $credentials['refresh_token'];
 
-        $response = json_decode( $response, true );
+            // Initialize CURL
+            $curl = curl_init();
 
-        return $response['access_token'];
+            // Set CURL options
+            curl_setopt_array(
+                $curl,
+                array(
+                    CURLOPT_URL            => 'https://vendor-api.jumia.com/token',
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING       => '',
+                    CURLOPT_MAXREDIRS      => 10,
+                    CURLOPT_TIMEOUT        => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST  => 'POST',
+                    CURLOPT_POSTFIELDS     => 'client_id=' . urlencode( $clientID ) . '&grant_type=refresh_token&refresh_token=' . urlencode( $refreshToken ),
+                    CURLOPT_HTTPHEADER     => array(
+                        'Content-Type: application/x-www-form-urlencoded',
+                    ),
+                )
+            );
+
+            // Execute CURL request
+            $response = curl_exec( $curl );
+
+            // Close CURL
+            curl_close( $curl );
+
+            // Decode response
+            $response = json_decode( $response, true );
+
+            // Check if access token exists in the response
+            if ( isset( $response['access_token'] ) ) {
+                // Put access token to file
+                $path = __DIR__ . '/Data/accessToken.txt';
+                file_put_contents( $path, $response['access_token'] );
+                echo "Access token generated and saved successfully";
+            } else {
+                // Handle the case if access token is not found in the response
+                echo "Error: Access token not found in response";
+            }
+        } catch (PDOException $e) {
+            // Handle PDO exceptions
+            echo "Error: " . $e->getMessage();
+        }
     }
+
 
     public function pushProductInfoToSheet() {
 
@@ -339,7 +376,6 @@ class ProductSync {
         }
     }
 
-
     public function getProductStatus() {
 
         $feedId = 'dbe99ec8-5c22-4482-ab07-49213b038f53';
@@ -373,6 +409,9 @@ class ProductSync {
 
 // $productSync = new ProductSync();
 // $productSync->updateStockPrice();
+
+// generate access token
+// $productSync->generateAccessToken();
 
 // get product status
 // $productSync->getProductStatus();
