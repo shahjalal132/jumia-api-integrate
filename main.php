@@ -100,38 +100,6 @@ class ProductSync {
         return $response->getValues();
     }
 
-    public function createProductsTable() {
-        // Require config file
-        require 'config.php';
-
-        // SQL command to create the products table
-        $sql = "CREATE TABLE IF NOT EXISTS `products` (
-                  `id` int unsigned NOT NULL AUTO_INCREMENT,
-                  `sku` varchar(100) NOT NULL,
-                  `sid` varchar(100) NOT NULL,
-                  `stock` int unsigned NOT NULL,
-                  `price` int unsigned NOT NULL,
-                  `status` varchar(30) NOT NULL,
-                  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-                  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                  PRIMARY KEY (`id`)
-                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci";
-
-        // Execute the SQL statement
-        $result = mysqli_query( $conn, $sql );
-
-        // Check if the table creation was successful
-        if ( !$result ) {
-            // Handle the error if table creation failed
-            echo "Error creating products table: " . mysqli_error( $conn );
-        } else {
-            echo "Products table created successfully";
-        }
-
-        // Close the database connection
-        mysqli_close( $conn );
-    }
-
     public function insertProductToDatabase() {
         // require config file
         require 'config.php';
