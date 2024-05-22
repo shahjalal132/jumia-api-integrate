@@ -216,7 +216,7 @@ class ProductSync {
         }
     }
 
-    public function updateProductStock( $sku, $id, $stock ) {
+    public function updateProductStockProto( $sku, $sid, $stock ) {
 
         // get access token
         $accessToken = file_get_contents( __DIR__ . '/Data/accessToken.txt' );
@@ -226,7 +226,7 @@ class ProductSync {
             "products" => [
                 [
                     "sellerSku" => $sku,
-                    "id"        => $id,
+                    "id"        => $sid,
                     "stock"     => intval( $stock ),
                 ],
             ],
@@ -263,7 +263,28 @@ class ProductSync {
         return $response;
     }
 
-    public function updateProductPrice( $sku, $id, $price ) {
+    public function updateProductsStock() {
+
+        // fetch products from database
+        $products = $this->fetchProductFromDatabase();
+
+        foreach ( $products as $product ) {
+
+            // retrieve product data
+            $sku   = $product['sku'];
+            $id    = $product['sid'];
+            $stock = $product['stock'];
+
+            // update stock
+            echo $this->updateProductStockProto( $sku, $id, $stock );
+
+            // update status to completed
+            $this->updateProductStatus( $id, 'stockCompleted' );
+
+        }
+    }
+
+    public function updateProductPriceProto( $sku, $sid, $price ) {
 
         // get access token
         $accessToken = file_get_contents( __DIR__ . '/Data/accessToken.txt' );
@@ -273,7 +294,7 @@ class ProductSync {
             "products" => [
                 [
                     "sellerSku"       => "$sku",
-                    "id"              => "$id",
+                    "id"              => "$sid",
                     "category"        => "",
                     "price"           => [
                         "currency"  => "MAD",
@@ -335,6 +356,27 @@ class ProductSync {
 
     }
 
+    public function updateProductsPrice() {
+
+        // fetch products from database
+        $products = $this->fetchProductFromDatabase();
+
+        foreach ( $products as $product ) {
+
+            // retrieve product data
+            $id    = $product['id'];
+            $sku   = $product['sku'];
+            $sid   = $product['sid'];
+            $price = $product['price'];
+
+            // update price
+            echo $this->updateProductPriceProto( $sku, $sid, $price );
+
+            // update status to completed
+            $this->updateProductStatus( $id, 'priceCompleted' );
+        }
+    }
+
     public function updateStockPrice() {
 
         // Fetch products from database
@@ -349,11 +391,11 @@ class ProductSync {
             $stock = $product['stock'] ?? 0;
             $price = $product['price'] ?? 0;
 
-            // Update product stock
-            echo $this->updateProductStock( $sku, $sid, $stock );
+            // Update stock
+            echo $this->updateProductStockProto( $sku, $sid, $stock );
 
-            // Update product price
-            echo $this->updateProductPrice( $sku, $sid, $price );
+            // Update price
+            echo $this->updateProductPriceProto( $sku, $sid, $price );
 
             // Update status to completed
             $this->updateProductStatus( $id, 'completed' );
@@ -425,7 +467,7 @@ class ProductSync {
 // get product status
 // $productSync->getProductStatus();
 
-// updaate prodcut stocks
+// update product stocks
 // $productSync->updateProductStock();
 
 // update product price
@@ -435,7 +477,7 @@ class ProductSync {
 // echo '<pre>';
 // print_r( $productSync->fetchProductsFromSheets() );
 
-// push product infor to sheet
+// push product info to sheet
 // $productSync->pushProductInfoToSheet();
 
 // insert products to database
