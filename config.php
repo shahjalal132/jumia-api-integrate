@@ -5,4 +5,10 @@ $user = 'root';
 $pass = '';
 $db   = 'test';
 
-$conn = mysqli_connect( $host, $user, $pass, $db ) or die( 'Connection Failed' );
+try {
+    $conn = new PDO( "mysql:host=$host;dbname=$db;charset=utf8", $user, $pass );
+    // Set the PDO error mode to exception
+    $conn->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+} catch (PDOException $e) {
+    die( 'Connection Failed: ' . $e->getMessage() );
+}

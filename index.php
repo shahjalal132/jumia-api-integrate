@@ -4,6 +4,7 @@ require_once 'config.php';
 
 if ( isset( $_SESSION['login'] ) ) {
     header( 'Location: admin/dashboard.php' );
+    exit();
 }
 
 // Check if the login form is submitted
@@ -13,23 +14,48 @@ if ( isset( $_POST['login'] ) ) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $sql    = "SELECT * FROM users";
-    $result = $conn->query( $sql );
-    $dbUser = $result->fetch_assoc();
-
-    $dbUsername = $dbUser['username'];
-    $dbPassword = $dbUser['password'];
+    $sql  = "SELECT * FROM users WHERE username = :username";
+    $stmt = $conn->prepare( $sql );
+    $stmt->bindParam( ':username', $username, PDO::PARAM_STR );
+    $stmt->execute();
+    $dbUser = $stmt->fetch( PDO::FETCH_ASSOC );
 
     $error = '';
 
-    if ( $username === $dbUsername && md5( $password ) === $dbPassword ) {
+    if ( $dbUser && $username === $dbUser['username'] && md5( $password ) === $dbUser['password'] ) {
         $_SESSION['login']    = 'successful';
         $_SESSION['username'] = $username;
+
+        // Check if "Keep me logged in" is checked
+        if ( isset( $_POST['keep_me_logged_in'] ) ) {
+            // Set a cookie for 30 days
+            setcookie( 'username', $username, time() + ( 30 * 24 * 60 * 60 ), "/" );
+            setcookie( 'password', md5( $password ), time() + ( 30 * 24 * 60 * 60 ), "/" );
+        }
+
         header( 'Location: admin/dashboard.php' );
+        exit();
     } else {
         $error = 'Invalid username or password';
     }
 
+} elseif ( isset( $_COOKIE['username'] ) && isset( $_COOKIE['password'] ) ) {
+    // Check if login cookies are present
+    $username = $_COOKIE['username'];
+    $password = $_COOKIE['password'];
+
+    $sql  = "SELECT * FROM users WHERE username = :username";
+    $stmt = $conn->prepare( $sql );
+    $stmt->bindParam( ':username', $username, PDO::PARAM_STR );
+    $stmt->execute();
+    $dbUser = $stmt->fetch( PDO::FETCH_ASSOC );
+
+    if ( $dbUser && $username === $dbUser['username'] && $password === $dbUser['password'] ) {
+        $_SESSION['login']    = 'successful';
+        $_SESSION['username'] = $username;
+        header( 'Location: admin/dashboard.php' );
+        exit();
+    }
 }
 ?>
 
@@ -67,7 +93,8 @@ if ( isset( $_POST['login'] ) ) {
                                 id="password" required>
                         </div>
                         <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="keep-me-logged-in">
+                            <input type="checkbox" class="form-check-input" name="keep_me_logged_in"
+                                id="keep-me-logged-in">
                             <label class="form-check-label" for="keep-me-logged-in">Keep me logged in</label>
                         </div>
                         <button type="submit" name="login" class="btn btn-primary">Login</button>
