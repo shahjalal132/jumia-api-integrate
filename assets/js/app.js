@@ -1,17 +1,4 @@
 $(document).ready(function () {
-  $("#open-sidebar").click(() => {
-    // add class active on #sidebar
-    $("#sidebar").addClass("active");
-
-    // show sidebar overlay
-    $("#sidebar-overlay").removeClass("d-none");
-  });
-
-  $("#sidebar-overlay").click(function () {
-    // add class active on #sidebar
-    $("#sidebar").removeClass("active");
-
-    // show sidebar overlay
-    $(this).addClass("d-none");
-  });
+  $("#tabs").tabs().addClass("ui-tabs-vertical ui-helper-clearfix");
+  $("#tabs li").removeClass("ui-corner-top").addClass("ui-corner-left");
 });
