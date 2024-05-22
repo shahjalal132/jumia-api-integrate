@@ -1,8 +1,35 @@
 <?php
-
 session_start();
+require_once '../config.php'; // Ensure this is correctly pointing to your config file
+
 if ( !isset( $_SESSION['login'] ) ) {
     header( 'location: ../index.php' );
+    exit();
+}
+
+$error   = '';
+$success = '';
+
+// Handle form submission for API credentials
+if ( isset( $_POST['save-api-credentials'] ) ) {
+    $clientId     = $_POST['client_id'];
+    $refreshToken = $_POST['refresh_token'];
+
+    if ( !empty( $clientId ) && !empty( $refreshToken ) ) {
+        try {
+            $sql  = "INSERT INTO api_credentials (client_id, refresh_token) VALUES (:client_id, :refresh_token)
+                    ON DUPLICATE KEY UPDATE refresh_token = :refresh_token";
+            $stmt = $conn->prepare( $sql );
+            $stmt->bindParam( ':client_id', $clientId );
+            $stmt->bindParam( ':refresh_token', $refreshToken );
+            $stmt->execute();
+            $success = 'API credentials saved successfully.';
+        } catch (PDOException $e) {
+            $error = 'Error saving API credentials: ' . $e->getMessage();
+        }
+    } else {
+        $error = 'Both Client ID and Refresh Token are required.';
+    }
 }
 
 ?>
@@ -20,8 +47,6 @@ if ( !isset( $_SESSION['login'] ) ) {
 </head>
 
 <body>
-
-
     <div id="dashboard">
         <div class="container">
             <div class="row">
@@ -33,21 +58,28 @@ if ( !isset( $_SESSION['login'] ) ) {
                             <li><a href="#controls" class="poppins-medium">Controls</a></li>
                         </ul>
                         <div id="application">
-                            <h2 class="text-center poppins-semibold text-primary mb-3">Api Credentials</h2>
+                            <h2 class="text-center poppins-semibold text-primary mb-3">API Credentials</h2>
                             <div id="api-credentials-form">
                                 <form method="POST">
+                                    <?php if ( $error ) : ?>
+                                        <div class="alert alert-danger"><?php echo $error; ?></div>
+                                    <?php endif; ?>
+                                    <?php if ( $success ) : ?>
+                                        <div class="alert alert-success"><?php echo $success; ?></div>
+                                    <?php endif; ?>
                                     <div class="mb-3">
                                         <label for="api-client-id" class="form-label">Client ID</label>
-                                        <input type="text" class="form-control bg-transparent "
-                                            placeholder="Enter Client ID" id="api-client-id"
-                                            aria-describedby="clientID">
+                                        <input type="text" name="client_id" class="form-control bg-transparent"
+                                            placeholder="Enter Client ID" id="api-client-id" aria-describedby="clientID"
+                                            required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="refresh-token" class="form-label">Refresh Token</label>
-                                        <input type="text" class="form-control bg-transparent "
-                                            placeholder="Enter Refresh Token" id="refresh-token">
+                                        <input type="text" name="refresh_token" class="form-control bg-transparent"
+                                            placeholder="Enter Refresh Token" id="refresh-token" required>
                                     </div>
-                                    <button type="submit" name="save" class="btn btn-primary">Save</button>
+                                    <button type="submit" name="save-api-credentials"
+                                        class="btn btn-primary">Save</button>
                                 </form>
                             </div>
                         </div>
@@ -55,7 +87,7 @@ if ( !isset( $_SESSION['login'] ) ) {
                             <h2 class="text-center poppins-semibold text-primary mb-3">Controls</h2>
                             <div id="controls-form">
                                 <form method="POST">
-                                    <div class="row flex-column ">
+                                    <div class="row flex-column">
                                         <div class="col-sm-6">
                                             <div class="mb-3 row">
                                                 <div class="col-sm-6">
@@ -79,7 +111,6 @@ if ( !isset( $_SESSION['login'] ) ) {
                                                         </label>
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -89,31 +120,25 @@ if ( !isset( $_SESSION['login'] ) ) {
                                                         <label class="form-label">Price Update:</label>
                                                     </div>
                                                 </div>
-
                                                 <div class="col-sm-6">
                                                     <div class="jumia-radio">
-
                                                         <input class="form-check-input" type="radio"
                                                             value="price-enable" name="price-update" id="price-enable">
                                                         <label class="form-check-label" for="price-enable">
                                                             Enable
                                                         </label>
-
                                                         <input class="form-check-input ms-4" type="radio"
                                                             value="price-disable" name="price-update"
                                                             id="price-disable">
                                                         <label class="form-check-label" for="price-disable">
                                                             Disable
                                                         </label>
-
                                                     </div>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
-
-                                    <button type="submit" name="save" class="btn btn-primary">Save</button>
+                                    <button type="submit" name="save-controls" class="btn btn-primary">Save</button>
                                 </form>
                             </div>
                         </div>
@@ -122,8 +147,6 @@ if ( !isset( $_SESSION['login'] ) ) {
             </div>
         </div>
     </div>
-
-
 
     <script src="../assets/js/jquery.min.js"></script>
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
