@@ -218,6 +218,9 @@ class ProductSync {
 
     public function updateProductStock( $sku, $id, $stock ) {
 
+        // get access token
+        $accessToken = file_get_contents( __DIR__ . '/Data/accessToken.txt' );
+
         // product array
         $productArray = [
             "products" => [
@@ -247,7 +250,7 @@ class ProductSync {
                 CURLOPT_CUSTOMREQUEST  => 'POST',
                 CURLOPT_POSTFIELDS     => $productJson,
                 CURLOPT_HTTPHEADER     => array(
-                    'Authorization: Bearer ' . $this->accessToken,
+                    'Authorization: Bearer ' . $accessToken,
                     'Content-Type: application/json',
                     'Cookie: __cf_bm=OtHRyWyEqMVWGVYkrwfm.URc3oCI05Hga2SgJ85NY_g-1714219200-1.0.1.1-y3od0XgXWab8h5MqqcqE7la1_K.qXR1gM0j4rRtAHjiSIt5U8lV_9MKH3fIl36QLc9kwPmfE1yO8IGLxmEZQZQ',
                 ),
@@ -261,6 +264,9 @@ class ProductSync {
     }
 
     public function updateProductPrice( $sku, $id, $price ) {
+
+        // get access token
+        $accessToken = file_get_contents( __DIR__ . '/Data/accessToken.txt' );
 
         // product array
         $productArray = [
@@ -315,7 +321,7 @@ class ProductSync {
                 CURLOPT_CUSTOMREQUEST  => 'POST',
                 CURLOPT_POSTFIELDS     => $productJson,
                 CURLOPT_HTTPHEADER     => array(
-                    'Authorization: Bearer ' . $this->accessToken,
+                    'Authorization: Bearer ' . $accessToken,
                     'Content-Type: application/json',
                     'Cookie: __cf_bm=z3K9NrE2Gay_MAHsE9uQHdyaMuJflcf4O5LMC.12cGM-1714276081-1.0.1.1-ZUAYpc4xlTXwxVX3IHXIiKZjaJzFKFbNTqDIrtnppaoONYpr6XHJ8WmJ.d7lxRZkf5c_goQyQDGx1FbLLQELow',
                 ),
@@ -378,6 +384,9 @@ class ProductSync {
 
     public function getProductStatus() {
 
+        // get access token
+        $accessToken = file_get_contents( __DIR__ . '/Data/accessToken.txt' );
+
         $feedId = 'dbe99ec8-5c22-4482-ab07-49213b038f53';
 
         $curl = curl_init();
@@ -394,7 +403,7 @@ class ProductSync {
                 CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST  => 'GET',
                 CURLOPT_HTTPHEADER     => array(
-                    'Authorization: Bearer ' . $this->accessToken,
+                    'Authorization: Bearer ' . $accessToken,
                 ),
             )
         );
@@ -435,6 +444,3 @@ class ProductSync {
 // fetch products from database
 // echo '<pre>';
 // print_r( $productSync->fetchProductFromDatabase() );
-
-// Create products table
-// $productSync->createProductsTable();
