@@ -149,9 +149,11 @@ class ProductSync {
 
             // Fetch products from Google Sheets
             $sheetData = $this->fetchProductsFromSheets();
+            // slice first element
+            $sheetData = array_slice( $sheetData, 1 );
 
             // Prepare the SQL statement for inserting products
-            $sql  = "INSERT INTO products (sku, sid, stock, price, status) VALUES (:sku, :sid, :stock, :price, :status)";
+            $sql  = "INSERT INTO products (sku, sid, stock, price, sale_price, start_date, end_date, status) VALUES (:sku, :sid, :stock, :price, :sale_price, :start_date, :end_date, :status)";
             $stmt = $conn->prepare( $sql );
 
             // Begin transaction
@@ -160,10 +162,20 @@ class ProductSync {
             // Insert products into database
             foreach ( $sheetData as $sheetDatum ) {
                 // Retrieve product data
-                $sku    = $sheetDatum[0];
-                $sid    = $sheetDatum[1];
-                $stock  = $sheetDatum[2];
-                $price  = $sheetDatum[3];
+                $sku        = $sheetDatum[0];
+                $sid        = $sheetDatum[1];
+                $stock      = $sheetDatum[2];
+                $price      = $sheetDatum[3];
+                $sale_price = $sheetDatum[4];
+
+                // start date
+                $start_date = $sheetDatum[5];
+                $start_date = substr( $start_date, 0, 16 );
+
+                // end date
+                $end_date = $sheetDatum[6];
+                $end_date = substr( $end_date, 0, 16 );
+
                 $status = 'pending';
 
                 // Bind parameters
@@ -171,6 +183,9 @@ class ProductSync {
                 $stmt->bindParam( ':sid', $sid );
                 $stmt->bindParam( ':stock', $stock );
                 $stmt->bindParam( ':price', $price );
+                $stmt->bindParam( ':sale_price', $sale_price );
+                $stmt->bindParam( ':start_date', $start_date );
+                $stmt->bindParam( ':end_date', $end_date );
                 $stmt->bindParam( ':status', $status );
 
                 // Execute the SQL statement
@@ -458,7 +473,7 @@ class ProductSync {
     }
 }
 
-// $productSync = new ProductSync();
+$productSync = new ProductSync();
 // $productSync->updateStockPrice();
 
 // generate access token
@@ -481,7 +496,7 @@ class ProductSync {
 // $productSync->pushProductInfoToSheet();
 
 // insert products to database
-// $productSync->insertProductToDatabase();
+$productSync->insertProductToDatabase();
 
 // fetch products from database
 // echo '<pre>';
