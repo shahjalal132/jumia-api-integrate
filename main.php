@@ -283,15 +283,19 @@ class ProductSync {
         // fetch products from database
         $products = $this->fetchProductFromDatabase();
 
+        // put data to productData.txt file
+        file_put_contents( __DIR__ . '/Data/productData.txt', json_encode( $products ) );
+
         foreach ( $products as $product ) {
 
             // retrieve product data
+            $id    = $product['id'];
             $sku   = $product['sku'];
-            $id    = $product['sid'];
+            $sid   = $product['sid'];
             $stock = $product['stock'];
 
             // update stock
-            echo $this->updateProductStockProto( $sku, $id, $stock );
+            echo $this->updateProductStockProto( $sku, $sid, $stock );
 
             // update status to completed
             $this->updateProductStatus( $id, 'stockCompleted' );
@@ -421,7 +425,7 @@ class ProductSync {
 
     private function updateProductStatus( $id, $status ) {
         // require config file
-        require_once 'config.php';
+        require 'config.php';
 
         try {
             // Update product status
@@ -483,7 +487,7 @@ $productSync = new ProductSync();
 // $productSync->getProductStatus();
 
 // update product stocks
-// $productSync->updateProductStock();
+$productSync->updateProductsStock();
 
 // update product price
 // $productSync->updateProductPrice();
@@ -496,7 +500,7 @@ $productSync = new ProductSync();
 // $productSync->pushProductInfoToSheet();
 
 // insert products to database
-$productSync->insertProductToDatabase();
+// $productSync->insertProductToDatabase();
 
 // fetch products from database
 // echo '<pre>';
