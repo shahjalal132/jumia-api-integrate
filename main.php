@@ -19,7 +19,7 @@ class ProductSync {
         $this->client->setAuthConfig( $this->credentialsPath );
         $this->service       = new Google_Service_Sheets( $this->client );
         $this->spreadsheetID = '1igZQ5L-FlY7FTzqMpxPOzbscWLYo15hLW5s9YHwPRD4';
-        $this->sheetRange    = 'products!A:D';
+        $this->sheetRange    = 'products!A:G';
         // $this->sheetRange = 'products!A1114:D1114';
         // $this->sheetRange = 'products';
         $this->shopID = '0705e4e4-eca2-4c92-b201-fcb9c654f0df';
