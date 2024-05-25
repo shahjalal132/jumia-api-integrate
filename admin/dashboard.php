@@ -26,10 +26,11 @@ try {
 }
 
 // Fetch existing control settings
-$stockUpdate = '';
-$priceUpdate = '';
+$stockUpdate     = '';
+$priceUpdate     = '';
+$salePriceUpdate = '';
 try {
-    $sql      = "SELECT control_key, control_value FROM controls WHERE control_key IN ('stock_update', 'price_update')";
+    $sql      = "SELECT control_key, control_value FROM controls WHERE control_key IN ('stock_update', 'price_update', 'salePrice_update')";
     $stmt     = $conn->query( $sql );
     $controls = $stmt->fetchAll( PDO::FETCH_ASSOC );
     foreach ( $controls as $control ) {
@@ -37,6 +38,8 @@ try {
             $stockUpdate = $control['control_value'];
         } elseif ( $control['control_key'] === 'price_update' ) {
             $priceUpdate = $control['control_value'];
+        } elseif ( $control['control_key'] === 'salePrice_update' ) {
+            $salePriceUpdate = $control['control_value'];
         }
     }
 } catch (PDOException $e) {
@@ -67,10 +70,11 @@ if ( isset( $_POST['save-api-credentials'] ) ) {
 
 // Handle form submission for controls
 if ( isset( $_POST['save-controls'] ) ) {
-    $stockUpdate = $_POST['stock-update'];
-    $priceUpdate = $_POST['price-update'];
+    $stockUpdate      = $_POST['stock-update'];
+    $priceUpdate      = $_POST['price-update'];
+    $salePriceUpdate  = $_POST['salePrice-update'];
 
-    if ( !empty( $stockUpdate ) && !empty( $priceUpdate ) ) {
+    if ( !empty( $stockUpdate ) && !empty( $priceUpdate ) && !empty( $salePriceUpdate ) ) {
         try {
             $conn->beginTransaction();
 
@@ -86,6 +90,13 @@ if ( isset( $_POST['save-controls'] ) ) {
                     ON DUPLICATE KEY UPDATE control_value = :price_update";
             $stmt = $conn->prepare( $sql );
             $stmt->bindParam( ':price_update', $priceUpdate );
+            $stmt->execute();
+
+            // Insert or update salePrice-update
+            $sql  = "INSERT INTO controls (control_key, control_value) VALUES ('salePrice_update', :salePrice_update)
+                    ON DUPLICATE KEY UPDATE control_value = :salePrice_update";
+            $stmt = $conn->prepare( $sql );
+            $stmt->bindParam( ':salePrice_update', $salePriceUpdate );
             $stmt->execute();
 
             $conn->commit();
@@ -206,6 +217,30 @@ if ( isset( $_POST['save-controls'] ) ) {
                                                             <?php echo ( $priceUpdate === 'price-disable' ) ? 'checked' : ''; ?> required>
                                                         <label class="form-check-label"
                                                             for="price-disable">Disable</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="mb-3 row">
+                                                <div class="col-sm-6">
+                                                    <div>
+                                                        <label for="price-update" class="form-label">Sale Price
+                                                            Update:</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="jumia-radio">
+                                                        <input class="form-check-input" type="radio"
+                                                            value="salePrice-enable" name="salePrice-update" id="salePrice-enable"
+                                                            <?php echo ( $salePriceUpdate === 'salePrice-enable' ) ? 'checked' : ''; ?> required>
+                                                        <label class="form-check-label"
+                                                            for="salePrice-enable">Enable</label>
+                                                        <input class="form-check-input ms-4" type="radio"
+                                                            value="salePrice-disable" name="salePrice-update" id="salePrice-disable"
+                                                            <?php echo ( $salePriceUpdate === 'salePrice-disable' ) ? 'checked' : ''; ?> required>
+                                                        <label class="form-check-label"
+                                                            for="salePrice-disable">Disable</label>
                                                     </div>
                                                 </div>
                                             </div>
