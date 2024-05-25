@@ -27,7 +27,7 @@ class ProductSync {
 
     public function generateAccessToken() {
         // require config file
-        require_once 'config.php';
+        require 'config.php';
 
         try {
             // Fetch client ID and refresh token from database
@@ -139,7 +139,7 @@ class ProductSync {
 
     public function insertProductToDatabase() {
         // require config file
-        require_once 'config.php';
+        require 'config.php';
 
         try {
             // Truncate the products table to remove previous products
@@ -208,7 +208,7 @@ class ProductSync {
 
     public function fetchProductFromDatabase() {
         // require config file
-        require_once 'config.php';
+        require 'config.php';
 
         try {
             // Fetch products from database
@@ -284,7 +284,7 @@ class ProductSync {
         $products = $this->fetchProductFromDatabase();
 
         // put data to productData.txt file
-        file_put_contents( __DIR__ . '/Data/productData.txt', json_encode( $products ) );
+        file_put_contents( __DIR__ . '/Data/productData.json', json_encode( $products ) );
 
         foreach ( $products as $product ) {
 
@@ -377,8 +377,8 @@ class ProductSync {
 
     public function updateProductsPrice() {
 
-        // fetch products from database
-        $products = $this->fetchProductFromDatabase();
+        // get product from productData.json file
+        $products = json_decode( file_get_contents( __DIR__ . '/Data/productData.json' ), true );
 
         foreach ( $products as $product ) {
 
@@ -477,7 +477,7 @@ class ProductSync {
     }
 }
 
-$productSync = new ProductSync();
+// $productSync = new ProductSync();
 // $productSync->updateStockPrice();
 
 // generate access token
@@ -487,10 +487,10 @@ $productSync = new ProductSync();
 // $productSync->getProductStatus();
 
 // update product stocks
-$productSync->updateProductsStock();
+// $productSync->updateProductsStock();
 
 // update product price
-// $productSync->updateProductPrice();
+// $productSync->updateProductsPrice();
 
 // get product from sheet
 // echo '<pre>';
