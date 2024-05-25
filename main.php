@@ -375,6 +375,102 @@ class ProductSync {
 
     }
 
+    public function updateProductSalePriceProto( $sku, $sid, $price, $sale_price, $start_date, $end_date ) {
+
+        // get access token
+        $accessToken = file_get_contents( __DIR__ . '/Data/accessToken.txt' );
+
+        // product array
+        $productArray = [
+            "products" => [
+                [
+                    "sellerSku"       => "$sku",
+                    "id"              => "$sid",
+                    "category"        => "",
+                    "price"           => [
+                        "currency"  => "MAD",
+                        "value"     => intval( $price ),
+                        "salePrice" => [
+                            "value"   => intval( $sale_price ),
+                            "startAt" => "$start_date",
+                            "endAt"   => "$end_date",
+                        ],
+                    ],
+                    "businessClients" => [
+                        [
+                            "businessClientCode" => "jumia-ma",
+                            "price"              => [
+                                "currency"  => "MAD",
+                                "value"     => intval( $price ),
+                                "salePrice" => [
+                                    "value"   => intval( $sale_price ),
+                                    "startAt" => "$start_date",
+                                    "endAt"   => "$end_date",
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+
+        // convert to json
+        $productJson = json_encode( $productArray );
+
+        $curl = curl_init();
+
+        curl_setopt_array(
+            $curl,
+            array(
+                CURLOPT_URL            => 'https://vendor-api.jumia.com/feeds/products/price',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING       => '',
+                CURLOPT_MAXREDIRS      => 10,
+                CURLOPT_TIMEOUT        => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST  => 'POST',
+                CURLOPT_POSTFIELDS     => $productJson,
+                CURLOPT_HTTPHEADER     => array(
+                    'Authorization: Bearer ' . $accessToken,
+                    'Content-Type: application/json',
+                    'Cookie: __cf_bm=z3K9NrE2Gay_MAHsE9uQHdyaMuJflcf4O5LMC.12cGM-1714276081-1.0.1.1-ZUAYpc4xlTXwxVX3IHXIiKZjaJzFKFbNTqDIrtnppaoONYpr6XHJ8WmJ.d7lxRZkf5c_goQyQDGx1FbLLQELow',
+                ),
+            )
+        );
+
+        $response = curl_exec( $curl );
+
+        curl_close( $curl );
+        return $response;
+
+    }
+
+    public function updateProductsSalePrice() {
+
+        // get product from productData.json file
+        $products = json_decode( file_get_contents( __DIR__ . '/Data/productData.json' ), true );
+
+        foreach ( $products as $product ) {
+
+            // retrieve product data
+            $id         = $product['id'];
+            $sku        = $product['sku'];
+            $sid        = $product['sid'];
+            $price      = $product['price'];
+            $sale_price = $product['sale_price'];
+            $start_date = $product['start_date'];
+            $end_date   = $product['end_date'];
+
+            // update price
+            echo $this->updateProductSalePriceProto( $sku, $sid, $price, $sale_price, $start_date, $end_date );
+
+            // update status to completed
+            $this->updateProductStatus( $id, 'salePriceCompleted' );
+        }
+    }
+
     public function updateProductsPrice() {
 
         // get product from productData.json file
@@ -491,6 +587,9 @@ class ProductSync {
 
 // update product price
 // $productSync->updateProductsPrice();
+
+// update product sale price
+// $productSync->updateProductsSalePrice();
 
 // get product from sheet
 // echo '<pre>';
