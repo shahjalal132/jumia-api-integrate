@@ -1,43 +1,42 @@
-## Jumia API Integration with Google Sheet API
+# Jumia API Integration with Google Sheets
 
 ## Overview
 
-An E-commerce API. All Products stored into a google sheet. Fetching from Google sheet and Create or Update product the vendor store. When all products are created then update product stock and price every 6 hours.
+This project integrates the Jumia API with the Google Sheets API to manage and update product information. The primary functionality involves fetching product data from Jumia, storing it in a Google Sheet, and ensuring that product stock and prices are updated periodically.
 
 ## Integration Process
 
-- Generate JWT access token from Jumia.
-- Generate Google sheet API and credentials from Google.
-- Integrate With Jumia API.
+1. **Generate JWT Access Token from Jumia**
+2. **Generate Google Sheets API Credentials**
+3. **Integrate Jumia API with Google Sheets API**
 
-## Work Flow
+### Updated Client Requirements
 
-- Fetch all products from Jumia API
-- Fetch all products from Google sheet
-- Check condition if product exists or not
-- If product exists, update product
-- If product does not exist, create product
-- Every 6 hours update product stock and price
+After initial development, the client requested new functionalities:
 
-### Changes Client Requirement
-
-Once created this functionality client change some requirement. He Created Product on his store. I need to update product stock and price every 6 hours. Then i need to update product stock and price every 6 hours.
+- Update product stock, price, and sale price every day at 4 PM, 8 PM, and 12 AM.
+- Provide an option for the client to enable or disable automatic updates.
+- Manage the refresh token, which expires periodically, through a client dashboard.
 
 ## Challenges
 
-- API was not ready and has some issues. I Had to research and contact with Jumia support team and fix it.
-- Google sheet API. I didn't know that. I had to learn it.
-- Business logic was not clear for me. I had to research and implement it.
-- First the code was written procedural way. Then I changed it to object oriented way.
-- Client has change his requirements. I need to update product stock and price every 6 hours.
+- **API Issues**: The Jumia API had several issues and was not fully ready. I had to contact Jumia support to resolve these issues.
+- **Learning Curve**: I had to learn how to use the Google Sheets API.
+- **Business Logic**: The initial business logic was unclear and required significant research and clarification.
+- **Code Refactoring**: The initial code was procedural. I refactored it to an object-oriented approach.
+- **Changing Requirements**: The client changed requirements multiple times, particularly regarding the frequency of product updates.
 
-## How to use
+## How to Use
 
-- Fetch git repo
-- Composer install
-- Integrate Google sheet API
-- Integrate Jumia API
-- Run index.php
+1. Fetch the Git repository.
+2. Run `composer install`.
+3. Integrate the Google Sheets API.
+4. Integrate the Jumia API.
+5. Run `index.php`.
+
+### Note
+
+I ignore google sheet credentials.
 
 ## Dependencies
 
@@ -47,6 +46,20 @@ Once created this functionality client change some requirement. He Created Produ
 - Google API PHP Client
 - Google Sheets API PHP Client
 
+## Images
+
+**Login Form**
+
+![Login Form](./assets/images/login-form.png)
+
+**Dashboard**
+
+![Dashboard](./assets/images/dashboard.png)
+
+**Control Panel**
+
+![Control Panel](./assets/images/controls.png)
+
 ## Author
 
-[Muhammad Shah jalal](https://github.com/shahjalal132)
+[Muhammad Shah Jalal](https://github.com/shahjalal132)
