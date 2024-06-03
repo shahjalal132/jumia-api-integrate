@@ -48,6 +48,11 @@ I ignore google sheet credentials.
 
 ## Images
 
+**Google Sheet**
+
+![Google Sheet](./assets/images/sheet.jpg)
+Jumia Platform provides an API for real-time price and stock updates. The client's requirement is to have access to modify these values if necessary. I have chosen Google Sheets to input the API values, allowing the client to modify or change them as needed. I will then insert these values into a database to perform further tasks.
+
 **Login Form**
 
 ![Login Form](./assets/images/login-form.png)
@@ -59,6 +64,11 @@ I ignore google sheet credentials.
 **Control Panel**
 
 ![Control Panel](./assets/images/controls.png)
+The update process runs in the background and is functioning well. However, the client needs to control these updates. I had to develop a dashboard with a proper login system to manage the automatic updates.
+
+**Shop Dashboard**
+![Shop Dashboard](./assets/images/products.jpg)
+Finally, the products are fully updated
 
 ## Author
 
